@@ -1,0 +1,95 @@
+{
+  "name": "vscode-micromamba",
+  "displayName": "Micromamba",
+  "description": "Make conda environments with micromamba.",
+  "version": "0.0.1-alpha.1",
+  "publisher": "corker",
+  "engines": {
+    "vscode": "^1.23.0"
+  },
+  "author": {
+    "name": "Michael Borisov",
+    "url": "https://github.com/corker/vscode-micromamba"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/corker/vscode-micromamba"
+  },
+  "galleryBanner": {
+    "theme": "dark",
+    "color": "#384357"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "micromamba",
+    "conda"
+  ],
+  "activationEvents": [
+    "workspaceContains:micromamba.yaml"
+  ],
+  "main": "./out/extension",
+  "icon": "images/vscode-micromamba.png",
+  "extensionKind": [
+    "workspace"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "corker.micromamba.apply",
+        "title": "Micromamba: Apply"
+      }
+    ]
+  },
+  "scripts": {
+    "ci": "npm run lint && npm run test -- --coverage",
+    "clean-out": "rimraf ./out",
+    "vscode:prepublish": "npm run clean-out && npm run compile",
+    "compile": "webpack --mode production",
+    "watch": "webpack --mode development --watch --info-verbosity verbose",
+    "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" \"*.json\"  \"*.js\" ",
+    "test": "jest",
+    "watch-test": "npm run test -- --watch"
+  },
+  "dependencies": {
+    "vscode-codicons": "^0.0.4"
+  },
+  "devDependencies": {
+    "@types/istanbul-lib-coverage": "^2.0.2",
+    "@types/istanbul-lib-source-maps": "^4.0.1",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^8.0.31",
+    "@types/vscode": "^1.23.0",
+    "@typescript-eslint/eslint-plugin": "^2.32.0",
+    "@typescript-eslint/parser": "^2.32.0",
+    "copy-webpack-plugin": "^6.0.2",
+    "coveralls": "^3.1.0",
+    "danger": "^10.1.1",
+    "eslint": "^7.0.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jest": "^23.10.0",
+    "eslint-plugin-jsdoc": "^25.2.0",
+    "eslint-plugin-prefer-arrow": "^1.2.1",
+    "eslint-plugin-prettier": "^3.1.3",
+    "istanbul-lib-coverage": "^3.0.0",
+    "istanbul-lib-source-maps": "^4.0.0",
+    "jest": "^26.6.3",
+    "jest-snapshot": "^25.5.0",
+    "prettier": "^2.0.5",
+    "raw-loader": "^4.0.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.4.4",
+    "ts-loader": "^7.0.1",
+    "typescript": "^3.8.3",
+    "vscode-test": "^1.3.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "__metadata": {
+    "id": "TBD",
+    "publisherDisplayName": "corker",
+    "publisherId": "TBD"
+  }
+}

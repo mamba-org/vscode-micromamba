@@ -1,0 +1,27 @@
+language: node_js
+
+stages:
+  - verify
+  - test
+  - pre-publish
+
+jobs:
+  - stage: "verify"
+    name: "verify"
+    node_js: "10"
+    os: linux
+    script: npx danger ci
+
+node_js:
+  - "10"
+  - "lts/*"
+
+os:
+  - osx
+  - linux
+  - windows
+
+script:
+  - npm run ci
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  - npm run vscode:prepublish

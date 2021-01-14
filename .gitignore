@@ -1,0 +1,9 @@
+_jest-editor/
+.vscode/symbols.json
+/coverage/
+node_modules/
+out/
+generated-icons/
+
+**/.DS_Store
+*.vsix

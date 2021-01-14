@@ -1,0 +1,42 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Tests",
+      "program": "${workspaceRoot}/node_modules/.bin/jest",
+      "cwd": "${workspaceRoot}",
+      "args": ["--i", "--config", "jest.config.js"],
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+      }
+    },
+    {
+      "name": "Debug unit tests",
+      "request": "launch",
+      "runtimeArgs": ["run", "test-watch"],
+      "runtimeExecutable": "npm",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "pwa-node"
+    },
+    {
+      "name": "Launch Extension (development)",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+      "outFiles": ["${workspaceFolder}/out/**/*.js"],
+      "preLaunchTask": "watch"
+    },
+    {
+      "name": "Launch Extension (production)",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+      "outFiles": ["${workspaceFolder}/out/**/*.js"],
+      "preLaunchTask": "npm: compile"
+    }
+  ]
+}
