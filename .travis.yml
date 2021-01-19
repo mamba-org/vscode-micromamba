@@ -5,6 +5,9 @@ stages:
   - test
   - pre-publish
 
+git:
+  autocrlf: input
+
 jobs:
   - stage: "verify"
     name: "verify"
