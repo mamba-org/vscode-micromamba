@@ -37,8 +37,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "corker.micromamba.make.default.env",
-        "title": "Mamba: create default environment"
+        "command": "corker.micromamba.init",
+        "title": "Micromamba: init"
+      },
+      {
+        "command": "corker.micromamba.refresh",
+        "title": "Micromamba: refresh"
       }
     ]
   },

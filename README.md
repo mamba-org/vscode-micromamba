@@ -18,15 +18,33 @@ Content
 
 ## The Aim
 
-TBD
+Quickly configure development tools in VSCode workspaces using conda-forge and micromamba.
+Install and initialize NodeJS, Go, Rust, Python or JupyterLab from the command pallet.
 
 ## Maintainers
 
 Michael Borisov ([@corker](https://github.com/corker)).
 
-## Features
+## Commands
 
-* TBD
+### Micromamba: init
+
+1. Open command pallet (ctrl+Shit+P)
+2. Type - micromamba init
+3. Choose a template from a list
+4. See the micromamba execution progress in terminal
+
+This command creates a file - micromamba.yaml describing configuration.
+The micromamba.yaml is a [mamba requirement file](https://mamba.readthedocs.io/en/latest/micromamba.html#yaml-environment-files)
+The extension comes with a number of templates but you could change it to your needs and re-run init command.
+
+### Micromamba: refresh
+
+1. Open command pallet (ctrl+Shit+P)
+2. Type - micromamba refresh
+4. See the micromamba execution progress in terminal
+
+Refresh command removes micromamba, packages, and environment, and run init command to create a fresh environment.
 
 ## How to get it?
 
