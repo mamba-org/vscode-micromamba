@@ -1,6 +1,6 @@
 # vscode-micromamba 
 
-[![Build Status](https://travis-ci.org/corker/vscode-micromamba.svg?branch=master)](https://travis-ci.org/corker/vscode-micromamba) [![Coverage Status](https://coveralls.io/repos/github/corker/vscode-micromamba/badge.svg?branch=master)](https://coveralls.io/github/corker/vscode-micromamba?branch=master) [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/corker.vscode-micromamba?color=success&label=Visual%20Studio%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba) 
+[![Build Status](https://github.com/corker/vscode-micromamba/workflows/ci/badge.svg?branch=main)](https://github.com/corker/vscode-micromamba/tree/main) [![Coverage Status](https://coveralls.io/repos/github/corker/vscode-micromamba/badge.svg?branch=main)](https://coveralls.io/github/corker/vscode-micromamba?branch=main) [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/corker.vscode-micromamba?color=success&label=Visual%20Studio%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba) 
 
 ---
 
