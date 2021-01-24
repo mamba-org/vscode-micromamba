@@ -2,10 +2,10 @@
   "name": "vscode-micromamba",
   "displayName": "Micromamba",
   "description": "Make conda environments with micromamba.",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.3",
   "publisher": "corker",
   "engines": {
-    "vscode": "^1.23.0"
+    "vscode": "^1.52.0"
   },
   "author": {
     "name": "Michael Borisov",
@@ -47,14 +47,13 @@
     ]
   },
   "scripts": {
-    "ci": "npm run lint && npm run test -- --coverage",
-    "clean-out": "rimraf ./out",
-    "vscode:prepublish": "npm run clean-out && npm run compile",
     "compile": "webpack --mode production",
     "watch": "webpack --mode development --watch",
     "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" \"*.json\"  \"*.js\" ",
     "test": "jest",
-    "watch-test": "npm run test -- --watch"
+    "watch-test": "npm run test -- --watch",
+    "make-release": "npm version patch",
+    "push-release": "git push --follow-tags"
   },
   "dependencies": {
     "follow-redirects": "^1.13.1",
