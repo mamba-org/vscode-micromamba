@@ -1,7 +1,8 @@
 import * as sh from 'shelljs';
 import * as path from 'path';
-import { ensureMicromamba, isMicromambaInstalled } from './ensureMicromamba';
+import { ensureMicromamba } from './ensureMicromamba';
 import { create, help } from './micromamba';
+import { isMicromambaInstalled } from './isMicromambaInstalled';
 
 const tmpDir = path.join(__dirname, 'tmp', path.basename(__filename));
 

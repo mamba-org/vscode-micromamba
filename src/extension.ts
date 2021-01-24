@@ -3,43 +3,145 @@ import * as vscode from 'vscode';
 import * as sh from 'shelljs';
 
 import { extensionName } from './appGlobals';
-import { ensureMicromamba } from './micromamba';
-import { execSync } from 'child_process';
-
-const micromambaYamlContent = `
-# This is a default micromamba configuration file
-
-name: default
-
-channels:
-  - conda-forge
-
-dependencies:
-  - nodejs
-`;
+import {
+  ensureMicromamba,
+  ensureMicromambaYamlFile,
+  getMicromambaEnvVariables,
+  makeMicromambaInitTask,
+} from './helpers';
 
 const state = {
-  envMakeCount: 0,
+  runningTaskCount: 0,
+};
+
+type ExtensionContext = {
+  rootDir: string;
+  micromambaDir: string;
+  micromambaPath: string;
+  micromambaYamlPath: string;
+};
+
+const lock = async (action: () => Promise<void>): Promise<void> => {
+  if (state.runningTaskCount) {
+    vscode.window.showInformationMessage('Another micromamba command is running');
+    return;
+  }
+  state.runningTaskCount++;
+  try {
+    await action();
+    state.runningTaskCount--;
+  } catch (err) {
+    state.runningTaskCount--;
+    vscode.window.showErrorMessage('Failed to run micromamba command');
+    throw err;
+  }
+};
+
+const makeExtensionContext = (): ExtensionContext => {
+  if (vscode.workspace.workspaceFolders) {
+    const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath;
+    const micromambaDir = path.join(rootDir, '.micromamba');
+    const micromambaPath = path.join(
+      micromambaDir,
+      process.platform === 'win32' ? 'micromamba.exe' : 'micromamba'
+    );
+    const micromambaYamlPath = path.join(rootDir, 'micromamba.yaml');
+    return { rootDir, micromambaDir, micromambaPath, micromambaYamlPath };
+  } else {
+    return undefined;
+  }
+};
+
+const runInitCommand = async (
+  context: vscode.ExtensionContext,
+  extContext: ExtensionContext
+): Promise<void> => {
+  try {
+    sh.mkdir('-p', extContext.micromambaDir);
+  } catch (ignore) {
+    vscode.window.showErrorMessage(`Can't create directory: ${extContext.micromambaDir}`);
+    return;
+  }
+  try {
+    await ensureMicromamba(extContext.micromambaDir);
+  } catch (ignore) {
+    vscode.window.showErrorMessage(`Can't download micromamba`);
+    return;
+  }
+  try {
+    const ok = await ensureMicromambaYamlFile(extContext);
+    if (!ok) return;
+  } catch (ignore) {
+    vscode.window.showErrorMessage(`Can't generate micromamba requirement file`);
+    return;
+  }
+  const task = makeMicromambaInitTask(extContext);
+  try {
+    const value = await vscode.tasks.executeTask(task);
+    return new Promise<void>((resolve) => {
+      const d = vscode.tasks.onDidEndTask((e) => {
+        if (e.execution != value) return;
+        try {
+          const envs = getMicromambaEnvVariables(extContext);
+          envs.forEach((x) => context.environmentVariableCollection.replace(x.name, x.value));
+        } catch (ignore) {
+          vscode.window.showErrorMessage(`Can't activate micromamba`);
+        }
+        d.dispose();
+        resolve();
+      });
+    });
+  } catch (ignore) {
+    vscode.window.showErrorMessage(`Can't initialize micromamba`);
+  }
+};
+
+const runRefreshCommand = (
+  context: vscode.ExtensionContext,
+  extContext: ExtensionContext
+): Promise<void> => {
+  const { micromambaDir } = extContext;
+  const tempDir = path.join(micromambaDir, 'temp');
+  const envsDir = path.join(micromambaDir, 'envs');
+  const pkgsDir = path.join(micromambaDir, 'pkgs');
+  const targetDir = path.join(tempDir, `${Date.now()}`);
+  try {
+    sh.mkdir('-p', targetDir);
+  } catch (ignore) {
+    vscode.window.showErrorMessage(`Can't create directory: ${targetDir}`);
+    return;
+  }
+  try {
+    if (sh.test('-d', envsDir)) sh.mv(envsDir, targetDir);
+  } catch (ignore) {
+    vscode.window.showErrorMessage(`Can't move directory: ${envsDir}`);
+    return;
+  }
+  try {
+    if (sh.test('-d', pkgsDir)) sh.mv(pkgsDir, targetDir);
+  } catch (ignore) {
+    vscode.window.showErrorMessage(`Can't move directory: ${pkgsDir}`);
+    return;
+  }
+  try {
+    if (sh.test('-f', extContext.micromambaPath)) sh.rm(extContext.micromambaPath);
+  } catch (ignore) {
+    vscode.window.showErrorMessage(`Can't remove file: ${extContext.micromambaPath}`);
+    return;
+  }
+  runInitCommand(context, extContext).then();
+  try {
+    sh.rm('-rf', tempDir);
+  } catch (ignore) {
+    /* noop */
+  }
 };
 
 export function activate(context: vscode.ExtensionContext): void {
   sh.config.fatal = true;
   sh.config.silent = false;
   sh.config.verbose = true;
-  const extContext = (() => {
-    if (vscode.workspace.workspaceFolders) {
-      const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath;
-      const micromambaDir = path.join(rootDir, '.micromamba');
-      const micromambaPath = path.join(
-        micromambaDir,
-        process.platform === 'win32' ? 'micromamba.exe' : 'micromamba'
-      );
-      const micromambaYamlPath = path.join(rootDir, 'micromamba.yaml');
-      return { rootDir, micromambaDir, micromambaPath, micromambaYamlPath };
-    } else {
-      return undefined;
-    }
-  })();
+  const extContext = makeExtensionContext();
   if (extContext) {
     context.environmentVariableCollection.prepend(
       'PATH',
@@ -49,76 +151,19 @@ export function activate(context: vscode.ExtensionContext): void {
     context.environmentVariableCollection.replace('MAMBA_EXE', extContext.micromambaPath);
   }
   context.subscriptions.push(
-    vscode.commands.registerCommand(`${extensionName}.make.default.env`, async () => {
+    vscode.commands.registerCommand(`${extensionName}.init`, async () => {
       if (!extContext) {
-        vscode.window.showInformationMessage('Please open a folder or a workspace');
+        vscode.window.showInformationMessage('Open a folder or a workspace');
         return;
       }
-      if (state.envMakeCount) return;
-      state.envMakeCount++;
-      sh.mkdir('-p', extContext.micromambaDir);
-      await ensureMicromamba(extContext.micromambaDir);
-      if (!sh.test('-e', extContext.micromambaYamlPath)) {
-        sh.ShellString(micromambaYamlContent).to(extContext.micromambaYamlPath);
+      lock(() => runInitCommand(context, extContext));
+    }),
+    vscode.commands.registerCommand(`${extensionName}.refresh`, async () => {
+      if (!extContext) {
+        vscode.window.showInformationMessage('Open a folder or a workspace');
+        return;
       }
-      // const channel = vscode.window.createOutputChannel('micromamba');
-      const args = [
-        'create',
-        '--file',
-        extContext.micromambaYamlPath,
-        '--ssl_verify',
-        'FALSE',
-        '--yes',
-      ];
-      const shellExecution = new vscode.ShellExecution('micromamba', args);
-      // const shellExecution = new vscode.ShellExecution('env')
-      const task = new vscode.Task(
-        { type: 'micromamba' },
-        vscode.workspace.workspaceFolders[0],
-        'make',
-        'micromamba',
-        shellExecution
-      );
-      vscode.tasks.executeTask(task).then(
-        (value) => {
-          const d = vscode.tasks.onDidEndTask((e) => {
-            if (e.execution != value) return;
-            const pathKey = Object.keys(process.env).find((x) => x.toUpperCase() === 'PATH');
-            const pathValue = process.env[pathKey];
-            try {
-              const envs = execSync('micromamba shell activate -s bash -p default', {
-                encoding: 'utf-8',
-                env: {
-                  PATH: [extContext.micromambaDir, pathValue].join(path.delimiter),
-                  MAMBA_ROOT_PREFIX: extContext.micromambaDir,
-                  MAMBA_EXE: extContext.micromambaPath,
-                },
-              })
-                .split('\r\n')
-                .join('\n')
-                .split('\n')
-                .filter((x) => x.startsWith('export '))
-                .map((x) => x.replace('export ', ''))
-                .map((x) => x.split('='))
-                .map((x) => {
-                  const name = x[0];
-                  const value = x[1].slice(1, -1);
-                  return { name, value };
-                });
-              envs.forEach((x) => context.environmentVariableCollection.replace(x.name, x.value));
-            } catch (ex) {
-              console.log(ex);
-            }
-            vscode.window.showInformationMessage('Micromamba environment completed.');
-            state.envMakeCount--;
-            d.dispose();
-          });
-        },
-        () => {
-          vscode.window.showErrorMessage('Micromamba environment failed.');
-          state.envMakeCount--;
-        }
-      );
+      lock(() => runRefreshCommand(context, extContext));
     })
   );
 }

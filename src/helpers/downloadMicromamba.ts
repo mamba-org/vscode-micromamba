@@ -7,10 +7,14 @@ import * as sh from 'shelljs';
 
 export const _downloadMicromamba = (url: string, tar: Writable): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
-    const req = https.get(url, (res) => res.pipe(bz2()).pipe(tar));
-    req.on('error', (err) => reject(err));
-    tar.on('error', (err) => reject(err));
-    tar.on('finish', () => resolve());
+    try {
+      const req = https.get(url, (res) => res.pipe(bz2()).pipe(tar));
+      req.on('error', (err) => reject(err));
+      tar.on('error', (err) => reject(err));
+      tar.on('finish', () => resolve());
+    } catch (err) {
+      reject(err);
+    }
   });
 };
 

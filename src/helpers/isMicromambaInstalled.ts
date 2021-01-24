@@ -1,6 +1,5 @@
 import * as path from 'path';
 import { spawnSync } from 'child_process';
-import { downloadMicromamba } from './downloadMicromamba';
 
 export const isMicromambaInstalled = (cwd: string): boolean => {
   const pathKey = Object.keys(process.env).find((x) => x.toLowerCase() === 'path');
@@ -19,9 +18,4 @@ export const isMicromambaInstalled = (cwd: string): boolean => {
   }
   if (res.stdout.length) return true;
   return false;
-};
-
-export const ensureMicromamba = async (cwd: string): Promise<void> => {
-  if (isMicromambaInstalled(cwd)) return;
-  await downloadMicromamba(cwd);
 };
