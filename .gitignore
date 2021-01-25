@@ -8,3 +8,4 @@ generated-icons/
 **/.DS_Store
 *.vsix
 tmp
+.idea

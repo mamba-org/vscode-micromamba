@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as sh from 'shelljs';
+import { isWindows } from './infra';
 
 const nodejs = `
 # This is a default micromamba configuration file
@@ -49,6 +50,18 @@ dependencies:
   - python
 `;
 
+const dotnet = `
+# This is a default micromamba configuration file
+
+name: default
+
+channels:
+  - conda-forge
+
+dependencies:
+  - dotnet
+`;
+
 const jupyterlab = `
 # This is a default micromamba configuration file
 
@@ -67,13 +80,22 @@ dependencies:
   - yarn
 `;
 
-const templates = {
-  nodejs,
-  go,
-  rust,
-  python,
-  jupyterlab,
-};
+const templates = isWindows
+  ? {
+      nodejs,
+      go,
+      rust,
+      python,
+      dotnet,
+      jupyterlab,
+    }
+  : {
+      nodejs,
+      go,
+      rust,
+      python,
+      jupyterlab,
+    };
 
 export const ensureMicromambaYamlFile = async (options: {
   micromambaYamlPath: string;

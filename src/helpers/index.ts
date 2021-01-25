@@ -1,4 +1,5 @@
-export { makeMicromambaInitTask } from './makeMicromambaInitTask';
-export { ensureMicromambaYamlFile } from './ensureMicromambaYamlFile';
-export { ensureMicromamba } from './ensureMicromamba';
-export { getMicromambaEnvVariables } from './getMicromambaEnvVariables';
+export { lock } from './lock';
+export { ExtensionContext, makeExtensionContext } from './makeExtensionContext';
+export { onActivate } from './onActivate';
+export { runInitCommand } from './runInitCommand';
+export { runRefreshCommand } from './runRefreshCommand';

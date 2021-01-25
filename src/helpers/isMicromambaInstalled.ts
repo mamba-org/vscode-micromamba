@@ -16,6 +16,5 @@ export const isMicromambaInstalled = (cwd: string): boolean => {
     console.error('status', res.status);
     return false;
   }
-  if (res.stdout.length) return true;
-  return false;
+  return !!res.stdout.length;
 };
