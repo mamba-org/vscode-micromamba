@@ -7,7 +7,7 @@ Bug-fixes within the same version aren't needed
 
 -->
 
-### 0.0.2
+### 0.0.3
 
 * Templates: dotnet (windows only)
 

@@ -1,11 +1,6 @@
 import * as path from 'path';
 import { execSync } from 'child_process';
-import { isWindows } from './infra';
-
-const getEnvPath = (): string => {
-  const pathKey = Object.keys(process.env).find((x) => x.toUpperCase() === 'PATH');
-  return process.env[pathKey];
-};
+import { isWindows, pathKey } from './infra';
 
 export const parseMicromambaShellActivateResponseWin = (
   res: string
@@ -28,7 +23,7 @@ export const getMicromambaEnvVariablesWin = (options: {
   micromambaPath: string;
 }): { name: string; value: string }[] => {
   const { micromambaDir, micromambaPath } = options;
-  const envPath = getEnvPath();
+  const envPath = process.env[pathKey];
   const res = execSync('micromamba shell activate -s powershell -p default', {
     encoding: 'utf-8',
     env: {
@@ -61,7 +56,7 @@ export const getMicromambaEnvVariablesNonWin = (options: {
   micromambaPath: string;
 }): { name: string; value: string }[] => {
   const { micromambaDir, micromambaPath } = options;
-  const envPath = getEnvPath();
+  const envPath = process.env[pathKey];
   const res = execSync('micromamba shell activate -s bash -p default', {
     encoding: 'utf-8',
     env: {
