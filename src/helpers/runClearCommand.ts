@@ -33,6 +33,14 @@ export const runClearCommand = (
     return undefined;
   }
   try {
+    sh.ls(micromambaDir)
+      .filter((x) => x !== 'temp')
+      .forEach((x) => sh.mv(path.join(micromambaDir, x), targetDir));
+  } catch (ignore) {
+    vscode.window.showErrorMessage(`Can't move from: ${micromambaDir}`);
+    return undefined;
+  }
+  try {
     if (sh.test('-f', extContext.micromambaPath)) sh.rm(extContext.micromambaPath);
   } catch (ignore) {
     vscode.window.showErrorMessage(`Can't remove file: ${extContext.micromambaPath}`);
@@ -45,7 +53,7 @@ export const runClearCommand = (
       cancellable: false,
     },
     async (progress) => {
-      progress.report({ message: 'Deleting micromamba files' });
+      await progress.report({ message: 'Deleting micromamba files' });
       try {
         sh.rm('-rf', tempDir);
       } catch (ignore) {
