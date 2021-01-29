@@ -44,7 +44,15 @@ Refresh command removes micromamba, packages, and environment, and run init comm
 
 1. Open command pallet (Ctrl+Shit+P)
 2. Type - micromamba refresh
-4. See the micromamba execution progress in terminal
+3. See the micromamba execution progress in terminal
+
+### Micromamba: clear
+
+Clear command removes micromamba, packages, and reset environment to the initial state.
+
+1. Open command pallet (Ctrl+Shit+P)
+2. Type - micromamba clear
+3. See the micromamba execution progress in terminal
 
 ## How to get it?
 

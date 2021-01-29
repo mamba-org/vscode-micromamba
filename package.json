@@ -43,6 +43,10 @@
       {
         "command": "corker.micromamba.refresh",
         "title": "Micromamba: refresh"
+      },
+      {
+        "command": "corker.micromamba.clear",
+        "title": "Micromamba: clear"
       }
     ]
   },

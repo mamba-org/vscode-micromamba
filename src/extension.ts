@@ -6,6 +6,7 @@ import {
   lock,
   makeExtensionContext,
   onActivate,
+  runClearCommand,
   runInitCommand,
   runRefreshCommand,
 } from './helpers';
@@ -15,9 +16,7 @@ export function activate(context: vscode.ExtensionContext): void {
   sh.config.silent = true;
   sh.config.verbose = false;
   const extContext = makeExtensionContext();
-  if (extContext) {
-    lock(() => onActivate(context, extContext));
-  }
+  lock(() => onActivate(context, extContext));
   context.subscriptions.push(
     vscode.commands.registerCommand(`${extensionName}.init`, async () => {
       if (!extContext) {
@@ -32,6 +31,13 @@ export function activate(context: vscode.ExtensionContext): void {
         return;
       }
       await lock(() => runRefreshCommand(context, extContext));
+    }),
+    vscode.commands.registerCommand(`${extensionName}.clear`, async () => {
+      if (!extContext) {
+        vscode.window.showInformationMessage('Open a folder or a workspace');
+        return;
+      }
+      await lock(() => runClearCommand(context, extContext));
     })
   );
 }

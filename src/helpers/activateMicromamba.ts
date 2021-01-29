@@ -8,6 +8,7 @@ export const activateMicromamba = (
 ): void => {
   try {
     const envs = getMicromambaEnvVariables(extContext);
+    context.environmentVariableCollection.clear();
     envs.forEach((x) => context.environmentVariableCollection.replace(x.name, x.value));
   } catch (ignore) {
     vscode.window.showErrorMessage(`Can't activate micromamba`);

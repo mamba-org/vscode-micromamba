@@ -6,6 +6,10 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
+### 0.0.5
+
+* Commands: clear
+
 
 ### 0.0.3
 
