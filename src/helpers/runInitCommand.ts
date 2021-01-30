@@ -24,7 +24,17 @@ export const runInitCommand = async (
     return;
   }
   try {
-    await ensureMicromamba(extContext.micromambaDir);
+    await vscode.window.withProgress(
+      {
+        title: 'Micromamba',
+        location: vscode.ProgressLocation.Notification,
+        cancellable: false,
+      },
+      async (progress) => {
+        progress.report({ message: 'Downloading micromamba' });
+        await ensureMicromamba(extContext.micromambaDir);
+      }
+    );
   } catch (ignore) {
     vscode.window.showErrorMessage(`Can't download micromamba`);
     return;
