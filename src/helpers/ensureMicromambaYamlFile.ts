@@ -1,6 +1,8 @@
+import { join } from 'path';
 import * as vscode from 'vscode';
 import * as sh from 'shelljs';
 import { isWindows } from './infra';
+import { ExtensionContext } from './makeExtensionContext';
 
 const nodejs = `
 # This is a default micromamba configuration file
@@ -97,15 +99,34 @@ const templates = isWindows
       jupyterlab,
     };
 
-export const ensureMicromambaYamlFile = async (options: {
-  micromambaYamlPath: string;
-}): Promise<boolean> => {
-  if (sh.test('-e', options.micromambaYamlPath)) return true;
-  const key = await vscode.window.showQuickPick(Object.keys(templates));
-  if (key) {
-    const content = templates[key];
-    sh.ShellString(content).to(options.micromambaYamlPath);
-    return true;
+const defaultFileName = 'environment.yml';
+
+export const ensureMicromambaYamlFile = async (
+  options: ExtensionContext
+): Promise<string | undefined> => {
+  const fileNames = sh
+    .ls(options.rootDir)
+    .filter(
+      (x) => x === defaultFileName || x.startsWith('environment.') || x.startsWith('environment-')
+    )
+    .filter((x) => x.endsWith('.yml') || x.endsWith('.yaml'));
+  switch (fileNames.length) {
+    case 0: {
+      const key = await vscode.window.showQuickPick(Object.keys(templates));
+      if (key) {
+        const content = templates[key];
+        const environmentFilePath = join(options.rootDir, defaultFileName);
+        sh.ShellString(content).to(environmentFilePath);
+        return environmentFilePath;
+      }
+      return undefined;
+    }
+    case 1:
+      return fileNames[0];
+    default: {
+      const fileName = await vscode.window.showQuickPick(fileNames);
+      if (fileName) return join(options.rootDir, fileName);
+      return undefined;
+    }
   }
-  return false;
 };

@@ -5,7 +5,6 @@ export type ExtensionContext = {
   rootDir: string;
   micromambaDir: string;
   micromambaPath: string;
-  micromambaYamlPath: string;
 };
 
 export const makeExtensionContext = (): ExtensionContext => {
@@ -16,8 +15,7 @@ export const makeExtensionContext = (): ExtensionContext => {
       micromambaDir,
       process.platform === 'win32' ? 'micromamba.exe' : 'micromamba'
     );
-    const micromambaYamlPath = path.join(rootDir, 'micromamba.yaml');
-    return { rootDir, micromambaDir, micromambaPath, micromambaYamlPath };
+    return { rootDir, micromambaDir, micromambaPath };
   } else {
     return undefined;
   }

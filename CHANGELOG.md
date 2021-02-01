@@ -6,10 +6,13 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
-### 0.0.5
+### 0.0.8
 
 * Commands: clear
 
+### 0.0.6
+
+* Support for multiple environment files
 
 ### 0.0.3
 

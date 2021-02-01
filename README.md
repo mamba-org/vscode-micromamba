@@ -29,8 +29,8 @@ Michael Borisov ([@corker](https://github.com/corker)).
 
 ### Micromamba: init
 
-This command creates a file - micromamba.yaml describing configuration.
-The micromamba.yaml is a [mamba requirement file](https://mamba.readthedocs.io/en/latest/micromamba.html#yaml-environment-files)
+This command creates a file - environment.yml describing configuration.
+The environment.yml is a [mamba environment file](https://mamba.readthedocs.io/en/latest/micromamba.html#yaml-environment-files)
 The extension comes with a number of templates but you could change it to your needs and re-run init command.
 
 1. Open command pallet (Ctrl+Shit+P)

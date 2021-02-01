@@ -16,13 +16,7 @@ export const runInitCommand = async (
     vscode.window.showErrorMessage(`Can't create directory: ${extContext.micromambaDir}`);
     return;
   }
-  try {
-    const ok = await ensureMicromambaYamlFile(extContext);
-    if (!ok) return;
-  } catch (ignore) {
-    vscode.window.showErrorMessage(`Can't generate micromamba requirement file`);
-    return;
-  }
+  const filePath = await ensureMicromambaYamlFile(extContext);
   try {
     await vscode.window.withProgress(
       {
@@ -39,7 +33,7 @@ export const runInitCommand = async (
     vscode.window.showErrorMessage(`Can't download micromamba`);
     return;
   }
-  const task = makeMicromambaInitTask(extContext);
+  const task = makeMicromambaInitTask({ filePath });
   try {
     const value = await vscode.tasks.executeTask(task);
     return new Promise<void>((resolve) => {
