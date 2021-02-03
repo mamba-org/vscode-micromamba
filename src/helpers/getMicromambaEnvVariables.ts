@@ -33,10 +33,12 @@ const getExecOptions = (
 export const getMicromambaEnvVariablesWin = (options: {
   micromambaDir: string;
   micromambaPath: string;
+  prefixName: string;
 }): { name: string; value: string }[] => {
-  const { micromambaDir, micromambaPath } = options;
+  const { micromambaDir, micromambaPath, prefixName } = options;
   const execOptions = getExecOptions(micromambaDir, micromambaPath);
-  const cmdFilePath = execSync('micromamba shell activate -s cmd.exe -p default', execOptions);
+  const command = `micromamba shell activate -s cmd.exe -p ${prefixName}`;
+  const cmdFilePath = execSync(command, execOptions);
   fs.appendFileSync(cmdFilePath, '\r\nset');
   const res = execSync(cmdFilePath, execOptions);
   fs.unlinkSync(cmdFilePath);
@@ -46,10 +48,12 @@ export const getMicromambaEnvVariablesWin = (options: {
 export const getMicromambaEnvVariablesNonWin = (options: {
   micromambaDir: string;
   micromambaPath: string;
+  prefixName: string;
 }): { name: string; value: string }[] => {
-  const { micromambaDir, micromambaPath } = options;
+  const { micromambaDir, micromambaPath, prefixName } = options;
   const execOptions = getExecOptions(micromambaDir, micromambaPath);
-  const bashActivateScript = execSync('micromamba shell activate -s bash -p default', execOptions);
+  const command = `micromamba shell activate -s bash -p ${prefixName}`;
+  const bashActivateScript = execSync(command, execOptions);
   const bashScript = [bashActivateScript, 'env'].join('\n');
   const res = execSync(bashScript, execOptions);
   return parseMicromambaShellActivateResponse(res);

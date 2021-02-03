@@ -5,9 +5,10 @@ export type ExtensionContext = {
   rootDir: string;
   micromambaDir: string;
   micromambaPath: string;
+  statusBarItem: vscode.StatusBarItem;
 };
 
-export const makeExtensionContext = (): ExtensionContext => {
+export const makeExtensionContext = (statusBarItem: vscode.StatusBarItem): ExtensionContext => {
   if (vscode.workspace.workspaceFolders) {
     const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath;
     const micromambaDir = path.join(rootDir, '.micromamba');
@@ -15,7 +16,7 @@ export const makeExtensionContext = (): ExtensionContext => {
       micromambaDir,
       process.platform === 'win32' ? 'micromamba.exe' : 'micromamba'
     );
-    return { rootDir, micromambaDir, micromambaPath };
+    return { rootDir, micromambaDir, micromambaPath, statusBarItem };
   } else {
     return undefined;
   }

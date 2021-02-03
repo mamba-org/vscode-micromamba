@@ -1,0 +1,13 @@
+﻿import { ExtensionContext } from './makeExtensionContext';
+import * as vscode from 'vscode';
+import { activateMicromambaEnvironment } from './activateMicromambaEnvironment';
+import { pickMicromambaEnvironmentPrefixName } from './pickMicromambaEnvironmentPrefixName';
+
+export const runActivateEnvironmentCommand = async (
+  context: vscode.ExtensionContext,
+  extContext: ExtensionContext
+): Promise<void> => {
+  const prefixName = await pickMicromambaEnvironmentPrefixName(extContext);
+  if (!prefixName) return;
+  activateMicromambaEnvironment(context, extContext, prefixName);
+};

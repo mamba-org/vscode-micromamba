@@ -40,6 +40,7 @@ dependencies:
   const varNames = getMicromambaEnvVariables({
     micromambaDir: tmpDir,
     micromambaPath: path.join(tmpDir, isWindows ? 'micromamba.exe' : 'micromamba'),
+    prefixName: 'mamba',
   }).map((x) => x.name);
   expect(varNames).toContain('CONDA_PREFIX');
   expect(varNames).toContain('CONDA_SHLVL');

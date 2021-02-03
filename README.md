@@ -27,31 +27,44 @@ Michael Borisov ([@corker](https://github.com/corker)).
 
 ## Commands
 
-### Micromamba: init
+### Micromamba: create environment
 
 This command creates a file - environment.yml describing configuration.
 The environment.yml is a [mamba environment file](https://mamba.readthedocs.io/en/latest/micromamba.html#yaml-environment-files)
 The extension comes with a number of templates but you could change it to your needs and re-run init command.
 
 1. Open command pallet (Ctrl+Shit+P)
-2. Type - micromamba init
+2. Type - micromamba create environment
 3. Choose a template from a list
 4. See the micromamba execution progress in terminal
+5. The environment is activated automatically
 
-### Micromamba: refresh
-
-Refresh command removes micromamba, packages, and environment, and run init command to create a fresh environment.
+### Micromamba: deactivate environment
 
 1. Open command pallet (Ctrl+Shit+P)
-2. Type - micromamba refresh
+2. Type - micromamba deactivate environment
 3. See the micromamba execution progress in terminal
 
-### Micromamba: clear
-
-Clear command removes micromamba, packages, and reset environment to the initial state.
+### Micromamba: activate environment
 
 1. Open command pallet (Ctrl+Shit+P)
-2. Type - micromamba clear
+2. Type - micromamba activate environment
+3. Choose an environment from a list of created environments
+4. See the micromamba execution progress in terminal
+
+### Micromamba: remove environment
+
+1. Open command pallet (Ctrl+Shit+P)
+2. Type - micromamba remove environment
+3. Choose an environment from a list of created environments
+4. See the micromamba execution progress in terminal
+
+### Micromamba: clear all
+
+Clear all command removes micromamba, packages, and reset environment to the initial state.
+
+1. Open command pallet (Ctrl+Shit+P)
+2. Type - micromamba clear all
 3. See the micromamba execution progress in terminal
 
 ## How to get it?

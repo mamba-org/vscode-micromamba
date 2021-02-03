@@ -3,6 +3,8 @@ import * as vscode from 'vscode';
 import * as sh from 'shelljs';
 import { isWindows } from './infra';
 import { ExtensionContext } from './makeExtensionContext';
+import * as fs from 'fs';
+import * as YAML from 'yaml';
 
 const nodejs = `
 # This is a default micromamba configuration file
@@ -101,11 +103,29 @@ const templates = isWindows
 
 const defaultFileName = 'environment.yml';
 
-export const ensureMicromambaYamlFile = async (
-  options: ExtensionContext
+export type MicromambaEnvironment = {
+  readonly name: string;
+  readonly dependencies: string[];
+};
+
+export const readMicromambaEnvironmentFromFile = async (
+  extContext: ExtensionContext,
+  environmentFileName: string
+): Promise<MicromambaEnvironment> => {
+  const environmentFilePath = join(extContext.rootDir, environmentFileName);
+  try {
+    const content = await fs.promises.readFile(environmentFilePath, 'utf8');
+    return YAML.parse(content);
+  } catch (ignore) {
+    return undefined;
+  }
+};
+
+export const pickMicromambaEnvironmentFile = async (
+  extContext: ExtensionContext
 ): Promise<string | undefined> => {
   const fileNames = sh
-    .ls(options.rootDir)
+    .ls(extContext.rootDir)
     .filter(
       (x) => x === defaultFileName || x.startsWith('environment.') || x.startsWith('environment-')
     )
@@ -115,7 +135,7 @@ export const ensureMicromambaYamlFile = async (
       const key = await vscode.window.showQuickPick(Object.keys(templates));
       if (key) {
         const content = templates[key];
-        const environmentFilePath = join(options.rootDir, defaultFileName);
+        const environmentFilePath = join(extContext.rootDir, defaultFileName);
         sh.ShellString(content).to(environmentFilePath);
         return environmentFilePath;
       }
@@ -125,7 +145,7 @@ export const ensureMicromambaYamlFile = async (
       return fileNames[0];
     default: {
       const fileName = await vscode.window.showQuickPick(fileNames);
-      if (fileName) return join(options.rootDir, fileName);
+      if (fileName) return join(extContext.rootDir, fileName);
       return undefined;
     }
   }

@@ -3,13 +3,13 @@ import * as path from 'path';
 import * as sh from 'shelljs';
 import * as rimraf from 'rimraf';
 import { ExtensionContext } from './makeExtensionContext';
-import { resetEnvironmentVariables } from './resetEnvironmentVariables';
+import { deactivateMicromambaEnvironment } from './activateMicromambaEnvironment';
 
-export const runClearCommand = (
+export const runClearAllCommand = (
   context: vscode.ExtensionContext,
   extContext: ExtensionContext
 ): Promise<void> | undefined => {
-  resetEnvironmentVariables(context, extContext);
+  deactivateMicromambaEnvironment(context, extContext);
   const { micromambaDir } = extContext;
   const tempDir = `${micromambaDir}_temp`;
   const targetDir = path.join(tempDir, `${Date.now()}`);

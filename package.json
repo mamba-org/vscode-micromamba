@@ -2,7 +2,7 @@
   "name": "vscode-micromamba",
   "displayName": "Micromamba",
   "description": "Make conda environments with micromamba.",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "publisher": "corker",
   "engines": {
     "vscode": "^1.52.0"
@@ -23,6 +23,7 @@
     "Other"
   ],
   "keywords": [
+    "micromamba",
     "mamba",
     "conda"
   ],
@@ -37,16 +38,24 @@
   "contributes": {
     "commands": [
       {
-        "command": "corker.micromamba.init",
-        "title": "Micromamba: init"
+        "command": "corker.micromamba.create.environment",
+        "title": "Micromamba: create environment"
       },
       {
-        "command": "corker.micromamba.refresh",
-        "title": "Micromamba: refresh"
+        "command": "corker.micromamba.activate.environment",
+        "title": "Micromamba: activate environment"
       },
       {
-        "command": "corker.micromamba.clear",
-        "title": "Micromamba: clear"
+        "command": "corker.micromamba.deactivate.environment",
+        "title": "Micromamba: deactivate environment"
+      },
+      {
+        "command": "corker.micromamba.remove.environment",
+        "title": "Micromamba: remove environment"
+      },
+      {
+        "command": "corker.micromamba.clear.all",
+        "title": "Micromamba: clear all"
       }
     ]
   },
@@ -63,8 +72,9 @@
     "follow-redirects": "^1.13.1",
     "shelljs": "^0.8.4",
     "tar": "6.1.0",
+    "unbzip2-stream": "1.4.3",
     "vscode-codicons": "^0.0.13",
-    "unbzip2-stream": "1.4.3"
+    "yaml": "^1.10.0"
   },
   "devDependencies": {
     "@types/follow-redirects": "^1.13.0",
