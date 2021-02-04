@@ -19,7 +19,7 @@ Content
 ## The Aim
 
 Quickly configure development tools in VSCode workspaces using conda-forge and micromamba.
-Install and initialize NodeJS, Go, Rust, Python or JupyterLab from the command pallet.
+Install and initialize NodeJS, Go, Rust, Python or JupyterLab from the command palette.
 
 ## Maintainers
 
@@ -33,7 +33,7 @@ This command creates a file - environment.yml describing configuration.
 The environment.yml is a [mamba environment file](https://mamba.readthedocs.io/en/latest/micromamba.html#yaml-environment-files)
 The extension comes with a number of templates but you could change it to your needs and re-run init command.
 
-1. Open command pallet (Ctrl+Shit+P)
+1. Open command palette (Ctrl+Shit+P)
 2. Type - micromamba create environment
 3. Choose a template from a list
 4. See the micromamba execution progress in terminal
@@ -41,20 +41,20 @@ The extension comes with a number of templates but you could change it to your n
 
 ### Micromamba: deactivate environment
 
-1. Open command pallet (Ctrl+Shit+P)
+1. Open command palette (Ctrl+Shit+P)
 2. Type - micromamba deactivate environment
 3. See the micromamba execution progress in terminal
 
 ### Micromamba: activate environment
 
-1. Open command pallet (Ctrl+Shit+P)
+1. Open command palette (Ctrl+Shit+P)
 2. Type - micromamba activate environment
 3. Choose an environment from a list of created environments
 4. See the micromamba execution progress in terminal
 
 ### Micromamba: remove environment
 
-1. Open command pallet (Ctrl+Shit+P)
+1. Open command palette (Ctrl+Shit+P)
 2. Type - micromamba remove environment
 3. Choose an environment from a list of created environments
 4. See the micromamba execution progress in terminal
@@ -63,7 +63,7 @@ The extension comes with a number of templates but you could change it to your n
 
 Clear all command removes micromamba, packages, and reset environment to the initial state.
 
-1. Open command pallet (Ctrl+Shit+P)
+1. Open command palette (Ctrl+Shit+P)
 2. Type - micromamba clear all
 3. See the micromamba execution progress in terminal
 
