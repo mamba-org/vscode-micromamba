@@ -103,50 +103,71 @@ const templates = isWindows
 
 const defaultFileName = 'environment.yml';
 
-export type MicromambaEnvironment = {
+export type MicromambaEnvironmentFileContent = {
   readonly name: string;
+  readonly channels: string[];
   readonly dependencies: string[];
 };
 
-export const readMicromambaEnvironmentFromFile = async (
+export type MicromambaEnvironmentFile = {
+  readonly fileName: string;
+  readonly filePath: string;
+  readonly content: MicromambaEnvironmentFileContent;
+};
+
+export const readMicromambaEnvironmentFile = async (
   extContext: ExtensionContext,
-  environmentFileName: string
-): Promise<MicromambaEnvironment> => {
-  const environmentFilePath = join(extContext.rootDir, environmentFileName);
+  fileName: string
+): Promise<MicromambaEnvironmentFile | undefined> => {
+  const filePath = join(extContext.rootDir, fileName);
   try {
-    const content = await fs.promises.readFile(environmentFilePath, 'utf8');
-    return YAML.parse(content);
+    const contentYaml = await fs.promises.readFile(filePath, 'utf8');
+    const content = YAML.parse(contentYaml) as MicromambaEnvironmentFileContent;
+    return { content, fileName, filePath };
   } catch (ignore) {
     return undefined;
   }
 };
 
-export const pickMicromambaEnvironmentFile = async (
+export const readMicromambaEnvironmentFiles = async (
   extContext: ExtensionContext
-): Promise<string | undefined> => {
+): Promise<MicromambaEnvironmentFile[]> => {
   const fileNames = sh
     .ls(extContext.rootDir)
-    .filter(
-      (x) => x === defaultFileName || x.startsWith('environment.') || x.startsWith('environment-')
-    )
+    .filter((x) => x === defaultFileName || x.toLowerCase().startsWith('environment'))
     .filter((x) => x.endsWith('.yml') || x.endsWith('.yaml'));
-  switch (fileNames.length) {
+  const promises = fileNames.map((x) => readMicromambaEnvironmentFile(extContext, x));
+  const environmentFiles = await Promise.all(promises);
+  return environmentFiles.filter((x) => !!x);
+};
+
+export const pickMicromambaEnvironmentFile = async (
+  extContext: ExtensionContext
+): Promise<MicromambaEnvironmentFile | undefined> => {
+  const files = await readMicromambaEnvironmentFiles(extContext);
+  switch (files.length) {
     case 0: {
-      const key = await vscode.window.showQuickPick(Object.keys(templates));
+      const placeHolder = 'Select an environment template';
+      const key = await vscode.window.showQuickPick(Object.keys(templates), { placeHolder });
       if (key) {
         const content = templates[key];
         const environmentFilePath = join(extContext.rootDir, defaultFileName);
         sh.ShellString(content).to(environmentFilePath);
-        return environmentFilePath;
+        return await readMicromambaEnvironmentFile(extContext, defaultFileName);
       }
       return undefined;
     }
     case 1:
-      return fileNames[0];
+      return files[0];
     default: {
-      const fileName = await vscode.window.showQuickPick(fileNames);
-      if (fileName) return join(extContext.rootDir, fileName);
-      return undefined;
+      const placeHolder = 'Select an environment file';
+      const items = files.map((data) => ({
+        label: data.fileName,
+        description: `[${data.content.name}]`,
+        data,
+      }));
+      const item = await vscode.window.showQuickPick(items, { placeHolder });
+      return item ? item.data : undefined;
     }
   }
 };

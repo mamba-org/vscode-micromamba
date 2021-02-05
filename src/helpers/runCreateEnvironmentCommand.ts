@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import { ExtensionContext } from './makeExtensionContext';
 import * as sh from 'shelljs';
 import {
+  MicromambaEnvironmentFile,
   pickMicromambaEnvironmentFile,
-  readMicromambaEnvironmentFromFile,
 } from './pickMicromambaEnvironmentFile';
 import { ensureMicromamba } from './ensureMicromamba';
 import { makeMicromambaCreateEnvironmentTask } from './makeMicromambaCreateEnvironmentTask';
@@ -38,9 +38,9 @@ const _ensureMicromamba = async (extContext: ExtensionContext): Promise<void> =>
   }
 };
 
-const _createEnvironment = async (environmentFileName: string): Promise<void> => {
+const _createEnvironment = async (environmentFile: MicromambaEnvironmentFile): Promise<void> => {
   try {
-    const task = makeMicromambaCreateEnvironmentTask(environmentFileName);
+    const task = makeMicromambaCreateEnvironmentTask(environmentFile.fileName);
     const value = await vscode.tasks.executeTask(task);
     await new Promise<void>((resolve) => {
       const d = vscode.tasks.onDidEndTask((e) => {
@@ -61,11 +61,11 @@ export const runCreateEnvironmentCommand = async (
   try {
     deactivateMicromambaEnvironment(context, extContext);
     _ensureMicromambaDir(extContext);
-    const environmentFileName = await pickMicromambaEnvironmentFile(extContext);
+    const environmentFile = await pickMicromambaEnvironmentFile(extContext);
+    if (!environmentFile) return;
     await _ensureMicromamba(extContext);
-    await _createEnvironment(environmentFileName);
-    const environment = await readMicromambaEnvironmentFromFile(extContext, environmentFileName);
-    activateMicromambaEnvironment(context, extContext, environment.name);
+    await _createEnvironment(environmentFile);
+    activateMicromambaEnvironment(context, extContext, environmentFile.content.name);
   } catch (error) {
     const message = error.message || `Can't create micromamba environment`;
     vscode.window.showErrorMessage(message);

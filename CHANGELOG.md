@@ -6,7 +6,7 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
-### 0.1.1
+### 0.1.2
 * Align commands with micromamba: create, activate, deactivate, remove, clear all
 
 ### 0.0.8

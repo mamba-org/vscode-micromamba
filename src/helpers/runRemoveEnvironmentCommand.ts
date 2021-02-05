@@ -10,7 +10,10 @@ export const runRemoveEnvironmentCommand = async (
   context: vscode.ExtensionContext,
   extContext: ExtensionContext
 ): Promise<void> => {
-  const prefixName = await pickMicromambaEnvironmentPrefixName(extContext);
+  const prefixName = await pickMicromambaEnvironmentPrefixName(
+    extContext,
+    'Select environment to remove'
+  );
   if (!prefixName) return;
   deactivateMicromambaEnvironment(context, extContext);
   const { micromambaDir } = extContext;
