@@ -18,12 +18,13 @@ Content
 
 ## The Aim
 
-Quickly configure development tools in VSCode workspaces using conda-forge and micromamba.
-Install and initialize NodeJS, Go, Rust, Python or JupyterLab from the command palette.
+Convenient way to install development tools in VSCode workspaces from [conda-forge](https://conda-forge.org) with [micromamba](https://mamba.readthedocs.io). Get NodeJS, Go, Rust, Python or JupyterLab installed by running a single command.
 
-## Maintainers
 
-Michael Borisov ([@corker](https://github.com/corker)).
+Inspired by [Robocorp](https://robocorp.com) RPA developer tools:
+ - [RCC](https://robocorp.com/docs/rcc/overview) - a command-line tool to run software robots and integrate with the Robocorp Cloud
+ - [Robocorp Lab](https://robocorp.com/docs/developer-tools/robocorp-lab/overview) - a JupyterLab based IDE to build software robots
+ - [Robocorp Code](https://robocorp.com/docs/developer-tools/visual-studio-code/overview) - a VSCode extension to build software robots
 
 ## Commands
 
@@ -74,6 +75,10 @@ Alternatively open Visual Studio Code, go to the extension view and search for "
  
 For detailed releases and migration help, please see [releases](https://github.com/corker/vscode-micromamba/releases).
 
+
+## Maintainers
+
+Michael Borisov ([@corker](https://github.com/corker)).
 
 ## Want to Contribute?
 
