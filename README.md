@@ -18,7 +18,7 @@ Content
 
 ## The Aim
 
-Convenient way to install development tools in VSCode workspaces from [conda-forge](https://conda-forge.org) with [micromamba](https://mamba.readthedocs.io). Get NodeJS, Go, Rust, Python or JupyterLab installed by running a single command.
+Provide a convenient way to install developer tools in VSCode workspaces from [conda-forge](https://conda-forge.org) with [micromamba](https://mamba.readthedocs.io). Get NodeJS, Go, Rust, Python or JupyterLab installed by running a single command.
 
 
 Inspired by [Robocorp](https://robocorp.com) RPA developer tools:
