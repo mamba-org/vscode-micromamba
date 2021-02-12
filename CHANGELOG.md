@@ -6,6 +6,9 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
+### 0.1.3
+* .gitignore added to .micromamba directory
+
 ### 0.1.2
 * Align commands with micromamba: create, activate, deactivate, remove, clear all
 

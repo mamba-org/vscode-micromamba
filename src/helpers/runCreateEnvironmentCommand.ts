@@ -11,10 +11,13 @@ import {
   activateMicromambaEnvironment,
   deactivateMicromambaEnvironment,
 } from './activateMicromambaEnvironment';
+import { join } from 'path';
 
 const _ensureMicromambaDir = (extContext: ExtensionContext): void => {
   try {
     sh.mkdir('-p', extContext.micromambaDir);
+    const gitIgnorePath = join(extContext.micromambaDir, '.gitignore');
+    if (!sh.test('-f', gitIgnorePath)) sh.ShellString('*').to(gitIgnorePath);
   } catch (ignore) {
     throw new Error(`Can't create directory: ${extContext.micromambaDir}`);
   }
