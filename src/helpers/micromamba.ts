@@ -31,6 +31,6 @@ export const help = (micromambaPath: string): string => {
 
 export const create = (options: { micromambaDir: string; micromambaYamlPath: string }): string => {
   const { micromambaDir, micromambaYamlPath } = options;
-  const args = ['create', '--file', micromambaYamlPath, '--ssl_verify', 'FALSE', '--yes'];
+  const args = ['create', '--file', micromambaYamlPath, '--yes'];
   return micromamba({ micromambaDir, args });
 };

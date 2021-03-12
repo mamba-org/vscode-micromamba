@@ -6,6 +6,9 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
+### 0.1.4
+* --ssl-verify flag deprecated
+
 ### 0.1.3
 * .gitignore added to .micromamba directory
 

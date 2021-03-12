@@ -4,8 +4,6 @@ export const getMicromambaCreateEnvironmentArgs = (environmentFileName: string):
   'create',
   '--file',
   environmentFileName,
-  '--ssl_verify',
-  'FALSE',
   '--yes',
 ];
 
