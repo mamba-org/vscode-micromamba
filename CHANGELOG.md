@@ -6,6 +6,9 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
+### 0.1.5
+* Improve environment template headers
+
 ### 0.1.4
 * --ssl-verify flag deprecated
 

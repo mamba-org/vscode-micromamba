@@ -6,8 +6,8 @@ import { ExtensionContext } from './makeExtensionContext';
 import * as fs from 'fs';
 import * as YAML from 'yaml';
 
-const nodejs = `
-# This is a default micromamba configuration file
+const nodejs = `# Micromamba environment file
+# https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
 
 name: default
 
@@ -18,8 +18,8 @@ dependencies:
   - nodejs
 `;
 
-const go = `
-# This is a default micromamba configuration file
+const go = `# Micromamba environment file
+# https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
 
 name: default
 
@@ -30,8 +30,8 @@ dependencies:
   - go
 `;
 
-const rust = `
-# This is a default micromamba configuration file
+const rust = `# Micromamba environment file
+# https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
 
 name: default
 
@@ -42,8 +42,8 @@ dependencies:
   - rust
 `;
 
-const python = `
-# This is a default micromamba configuration file
+const python = `# Micromamba environment file
+# https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
 
 name: default
 
@@ -54,8 +54,8 @@ dependencies:
   - python
 `;
 
-const dotnet = `
-# This is a default micromamba configuration file
+const dotnet = `# Micromamba environment file
+# https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
 
 name: default
 
@@ -66,8 +66,8 @@ dependencies:
   - dotnet
 `;
 
-const jupyterlab = `
-# This is a default micromamba configuration file
+const jupyterlab = `# Micromamba environment file
+# https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
 
 name: default
 
