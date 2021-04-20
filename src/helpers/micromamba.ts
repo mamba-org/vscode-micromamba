@@ -6,7 +6,7 @@ export const makeEnv = (micromambaDir: string): NodeJS.ProcessEnv => {
     ...process.env,
     MAMBA_ROOT_PREFIX: micromambaDir,
   };
-  const pathKey = Object.keys(env).find((x) => x.toLowerCase() === 'path');
+  const pathKey = Object.keys(env).find((x) => x.toLowerCase() === 'path') as string;
   env[pathKey] = [micromambaDir, env[pathKey]].join(path.delimiter);
   return env;
 };

@@ -138,7 +138,7 @@ export const readMicromambaEnvironmentFiles = async (
     .filter((x) => x.endsWith('.yml') || x.endsWith('.yaml'));
   const promises = fileNames.map((x) => readMicromambaEnvironmentFile(extContext, x));
   const environmentFiles = await Promise.all(promises);
-  return environmentFiles.filter((x) => !!x);
+  return environmentFiles.filter((x) => !!x).map((x) => x as MicromambaEnvironmentFile);
 };
 
 export const pickMicromambaEnvironmentFile = async (

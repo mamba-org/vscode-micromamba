@@ -4,11 +4,12 @@ import * as sh from 'shelljs';
 import * as rimraf from 'rimraf';
 import { ExtensionContext } from './makeExtensionContext';
 import { deactivateMicromambaEnvironment } from './activateMicromambaEnvironment';
+import { refreshContextFlags } from './refreshContextFlags';
 
 export const runClearAllCommand = (
   context: vscode.ExtensionContext,
   extContext: ExtensionContext
-): Promise<void> | undefined => {
+): Promise<void> => {
   deactivateMicromambaEnvironment(context, extContext);
   const { micromambaDir } = extContext;
   const tempDir = `${micromambaDir}_temp`;
@@ -17,14 +18,15 @@ export const runClearAllCommand = (
     sh.mkdir('-p', targetDir);
   } catch (ignore) {
     vscode.window.showErrorMessage(`Can't create directory: ${targetDir}`);
-    return undefined;
+    return Promise.resolve();
   }
   try {
     if (sh.test('-d', micromambaDir)) sh.mv(micromambaDir, targetDir);
   } catch (ignore) {
     vscode.window.showErrorMessage(`Can't move directory: ${micromambaDir}`);
-    return undefined;
+    return Promise.resolve();
   }
+  refreshContextFlags(context, extContext);
   return vscode.window.withProgress(
     {
       title: 'Micromamba',

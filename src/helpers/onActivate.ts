@@ -5,6 +5,7 @@ import {
 } from './activateMicromambaEnvironment';
 import { isMicromambaInstalled } from './isMicromambaInstalled';
 import { ExtensionContext } from './makeExtensionContext';
+import { refreshContextFlags } from './refreshContextFlags';
 
 export const onActivate = async (
   context: vscode.ExtensionContext,
@@ -19,4 +20,5 @@ export const onActivate = async (
   } else {
     context.environmentVariableCollection.clear();
   }
+  refreshContextFlags(context, extContext);
 };

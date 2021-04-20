@@ -7,10 +7,13 @@ export const getMicromambaCreateEnvironmentArgs = (environmentFileName: string):
   '--yes',
 ];
 
-export const makeMicromambaCreateEnvironmentTask = (environmentFileName: string): vscode.Task =>
+export const makeMicromambaCreateEnvironmentTask = (
+  environmentFileName: string,
+  workspaceFolder: vscode.WorkspaceFolder
+): vscode.Task =>
   new vscode.Task(
     { type: 'micromamba' },
-    vscode.workspace.workspaceFolders[0],
+    workspaceFolder,
     'create environment',
     'micromamba',
     new vscode.ShellExecution('micromamba', getMicromambaCreateEnvironmentArgs(environmentFileName))

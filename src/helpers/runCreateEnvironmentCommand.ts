@@ -12,6 +12,7 @@ import {
   deactivateMicromambaEnvironment,
 } from './activateMicromambaEnvironment';
 import { join } from 'path';
+import { refreshContextFlags } from './refreshContextFlags';
 
 const _ensureMicromambaDir = (extContext: ExtensionContext): void => {
   try {
@@ -43,7 +44,9 @@ const _ensureMicromamba = async (extContext: ExtensionContext): Promise<void> =>
 
 const _createEnvironment = async (environmentFile: MicromambaEnvironmentFile): Promise<void> => {
   try {
-    const task = makeMicromambaCreateEnvironmentTask(environmentFile.fileName);
+    const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+    if (!workspaceFolder) return Promise.resolve();
+    const task = makeMicromambaCreateEnvironmentTask(environmentFile.fileName, workspaceFolder);
     const value = await vscode.tasks.executeTask(task);
     await new Promise<void>((resolve) => {
       const d = vscode.tasks.onDidEndTask((e) => {
@@ -73,4 +76,5 @@ export const runCreateEnvironmentCommand = async (
     const message = error.message || `Can't create micromamba environment`;
     vscode.window.showErrorMessage(message);
   }
+  refreshContextFlags(context, extContext);
 };

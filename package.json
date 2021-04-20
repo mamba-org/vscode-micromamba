@@ -43,19 +43,23 @@
       },
       {
         "command": "corker.micromamba.activate.environment",
-        "title": "Micromamba: activate environment"
+        "title": "Micromamba: activate environment",
+        "enablement": "corker.micromamba.can.activate.environment"
       },
       {
         "command": "corker.micromamba.deactivate.environment",
-        "title": "Micromamba: deactivate environment"
+        "title": "Micromamba: deactivate environment",
+        "enablement": "corker.micromamba.can.deactivate.environment"
       },
       {
         "command": "corker.micromamba.remove.environment",
-        "title": "Micromamba: remove environment"
+        "title": "Micromamba: remove environment",
+        "enablement": "corker.micromamba.can.remove.environment"
       },
       {
         "command": "corker.micromamba.clear.all",
-        "title": "Micromamba: clear all"
+        "title": "Micromamba: clear all",
+        "enablement": "corker.micromamba.can.clear.all"
       }
     ]
   },

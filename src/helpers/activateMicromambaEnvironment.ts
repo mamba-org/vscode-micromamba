@@ -6,6 +6,10 @@ import { pathKey } from './infra';
 
 const environmentNameStateKey = 'micromamba.active.environment.name';
 
+export const getActiveMicromambaEnvironmentPrefixName = (
+  context: vscode.ExtensionContext
+): string | undefined => context.workspaceState.get<string>(environmentNameStateKey);
+
 export const deactivateMicromambaEnvironment = (
   context: vscode.ExtensionContext,
   extContext: ExtensionContext
@@ -24,7 +28,7 @@ export const restoreMicromambaEnvironment = (
   context: vscode.ExtensionContext,
   extContext: ExtensionContext
 ): void => {
-  const prefixName = context.workspaceState.get<string>(environmentNameStateKey);
+  const prefixName = getActiveMicromambaEnvironmentPrefixName(context);
   if (prefixName) {
     activateMicromambaEnvironment(context, extContext, prefixName);
   } else {

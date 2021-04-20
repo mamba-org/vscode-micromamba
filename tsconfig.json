@@ -9,6 +9,7 @@
     "outDir": "out",
     "lib": ["es6", "es7"],
     "sourceMap": true,
+    "strictNullChecks": true,
     "rootDir": ".",
     "plugins": [
       {

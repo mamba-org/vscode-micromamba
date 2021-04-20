@@ -7,39 +7,51 @@ import {
   MicromambaEnvironmentFile,
 } from './pickMicromambaEnvironmentFile';
 
-const _pickMicromambaEnvironmentPrefixName = async (
+export type MicromambaEnvironmentQuickPickItem = {
+  label: string;
+  description: string;
+  data: MicromambaEnvironmentFile;
+};
+
+const mapToQuickPickItems = (
   files: MicromambaEnvironmentFile[],
-  prefixNames: string[],
-  placeHolder: string
-): Promise<string | undefined> => {
-  const items = files
+  prefixNames: string[]
+): MicromambaEnvironmentQuickPickItem[] => {
+  return files
     .filter((x) => prefixNames.find((p) => p === x.content.name))
     .map((data) => ({
       label: data.fileName,
       description: `[${data.content.name}]`,
       data,
     }));
-  const item = await vscode.window.showQuickPick(items, { placeHolder });
-  return item ? item.data.content.name : undefined;
+};
+
+export const findMicromambaEnvironmentQuickPickItems = async (
+  extContext: ExtensionContext
+): Promise<MicromambaEnvironmentQuickPickItem[]> => {
+  const names = readMicromambaEnvironmentPrefixNames(extContext);
+  const files = await readMicromambaEnvironmentFiles(extContext);
+  return mapToQuickPickItems(files, names);
+};
+
+export const readMicromambaEnvironmentPrefixNames = (extContext: ExtensionContext): string[] => {
+  const envsPath = join(extContext.micromambaDir, 'envs');
+  return sh.test('-d', envsPath) ? sh.ls(envsPath) : [];
 };
 
 export const pickMicromambaEnvironmentPrefixName = async (
   extContext: ExtensionContext,
   placeHolder: string
-): Promise<string> => {
-  const envsPath = join(extContext.micromambaDir, 'envs');
-  if (!sh.test('-d', envsPath)) return undefined;
-  const names = sh.ls(envsPath);
-  const files = await readMicromambaEnvironmentFiles(extContext);
-  switch (names.length) {
+): Promise<string | undefined> => {
+  const items = await findMicromambaEnvironmentQuickPickItems(extContext);
+  switch (items.length) {
     case 0:
       return undefined;
     case 1:
-      return files.length === 1
-        ? names[0]
-        : _pickMicromambaEnvironmentPrefixName(files, names, placeHolder);
+      return items[0].data.content.name;
     default: {
-      return _pickMicromambaEnvironmentPrefixName(files, names, placeHolder);
+      const item = await vscode.window.showQuickPick(items, { placeHolder });
+      return item ? item.data.content.name : undefined;
     }
   }
 };
