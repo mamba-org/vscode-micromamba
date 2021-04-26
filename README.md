@@ -89,6 +89,8 @@ Michael Borisov ([@corker](https://github.com/corker)).
 
 Thanks for considering! Check [here](CONTRIBUTING.md) for useful tips and guidelines.
 
-## License
+### License
 
-vscode-micromamba is [Apache2 licensed.](LICENSE)
+We use a shared copyright model that enables all contributors to maintain the copyright on their contributions.
+
+This software is licensed under the BSD-3-Clause license. See the [LICENSE](LICENSE) file for details.

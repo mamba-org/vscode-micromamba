@@ -6,6 +6,9 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
+### 0.1.8
+* License changed to BSD-3
+
 ### 0.1.7
 * DotEnv file generator added
 
