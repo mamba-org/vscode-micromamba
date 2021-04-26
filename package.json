@@ -9,11 +9,11 @@
   },
   "author": {
     "name": "Michael Borisov",
-    "url": "https://github.com/corker/vscode-micromamba"
+    "url": "https://github.com/mamba-org/vscode-micromamba"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/corker/vscode-micromamba"
+    "url": "https://github.com/mamba-org/vscode-micromamba"
   },
   "galleryBanner": {
     "theme": "dark",

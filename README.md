@@ -1,6 +1,6 @@
 # vscode-micromamba 
 
-[![Build Status](https://github.com/corker/vscode-micromamba/workflows/ci/badge.svg?branch=main)](https://github.com/corker/vscode-micromamba/tree/main) [![Coverage Status](https://coveralls.io/repos/github/corker/vscode-micromamba/badge.svg?branch=main)](https://coveralls.io/github/corker/vscode-micromamba?branch=main) [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/corker.vscode-micromamba?color=success&label=Visual%20Studio%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba) 
+[![Build Status](https://github.com/mamba-org/vscode-micromamba/workflows/ci/badge.svg?branch=main)](https://github.com/mamba-org/vscode-micromamba/tree/main) [![Coverage Status](https://coveralls.io/repos/github/mamba-org/vscode-micromamba/badge.svg?branch=main)](https://coveralls.io/github/mamba-org/vscode-micromamba?branch=main) [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/corker.vscode-micromamba?color=success&label=Visual%20Studio%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba) 
 
 ---
 
@@ -78,7 +78,7 @@ Each time user creates or activates an environment there is a ~/.micromamba/.env
 Simply open [Micromamba - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba) and click "Install".
 Alternatively open Visual Studio Code, go to the extension view and search for "Micromamba".
  
-For detailed releases and migration help, please see [releases](https://github.com/corker/vscode-micromamba/releases).
+For detailed releases and migration help, please see [releases](https://github.com/mamba-org/vscode-micromamba/releases).
 
 
 ## Maintainers

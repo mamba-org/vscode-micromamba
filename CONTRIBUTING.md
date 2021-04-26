@@ -13,7 +13,7 @@ _(If you have contributed to any open source project before, you already knew it
 ### Repository Setup
 
 ```js
-git clone https://github.com/corker/vscode-micromamba
+git clone https://github.com/mamba-org/vscode-micromamba
 cd vscode-micromamba
 npm install
 code .
