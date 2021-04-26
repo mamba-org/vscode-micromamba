@@ -3,6 +3,7 @@ import { getMicromambaEnvVariables } from './getMicromambaEnvVariables';
 import { ExtensionContext } from './makeExtensionContext';
 import * as path from 'path';
 import { pathKey } from './infra';
+import { createEnvFile } from './createEnvFile';
 
 const environmentNameStateKey = 'micromamba.active.environment.name';
 
@@ -43,6 +44,7 @@ export const activateMicromambaEnvironment = (
 ): void => {
   try {
     const envs = getMicromambaEnvVariables({ ...extContext, prefixName });
+    createEnvFile(envs, extContext, prefixName);
     context.environmentVariableCollection.clear();
     envs.forEach((x) => context.environmentVariableCollection.replace(x.name, x.value));
     context.workspaceState.update(environmentNameStateKey, prefixName);

@@ -21,13 +21,13 @@ describe('downloadMicromamba', () => {
   }, 10000);
 
   it('linux', async () => {
-    await downloadMicromambaMac(tmpDir);
+    await downloadMicromambaLinux(tmpDir);
     const actual = sh.ls(tmpDir).toString();
     expect(actual).toBe('micromamba');
   }, 10000);
 
   it('darwin', async () => {
-    await downloadMicromambaLinux(tmpDir);
+    await downloadMicromambaMac(tmpDir);
     const actual = sh.ls(tmpDir).toString();
     expect(actual).toBe('micromamba');
   }, 10000);

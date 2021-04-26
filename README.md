@@ -68,6 +68,11 @@ Clear all command removes micromamba, packages, and reset environment to the ini
 2. Type - micromamba clear all
 3. See the micromamba execution progress in terminal
 
+### DotEnv file support
+
+DotEnv file is a convenient way to provide environment variables to other extensions or user scripts.
+Each time user creates or activates an environment there is a ~/.micromamba/.env.{prefix-name} file created.
+
 ## How to get it?
 
 Simply open [Micromamba - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba) and click "Install".
