@@ -5,7 +5,6 @@ import * as sh from 'shelljs';
 import * as rimraf from 'rimraf';
 import { deactivateMicromambaEnvironment } from './activateMicromambaEnvironment';
 import { pickMicromambaEnvironmentPrefixName } from './pickMicromambaEnvironmentPrefixName';
-import { refreshContextFlags } from './refreshContextFlags';
 
 export const runRemoveEnvironmentCommand = async (
   context: vscode.ExtensionContext,
@@ -33,7 +32,6 @@ export const runRemoveEnvironmentCommand = async (
     vscode.window.showErrorMessage(`Can't move directory: ${envDir}`);
     return;
   }
-  refreshContextFlags(context, extContext);
   return vscode.window.withProgress(
     {
       title: 'Micromamba',

@@ -19,42 +19,42 @@ export function activate(context: vscode.ExtensionContext): void {
   const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
   context.subscriptions.push(statusBarItem);
   const extContext = makeExtensionContext(statusBarItem);
-  lock(() => onActivate(context, extContext)).then();
+  lock(onActivate, context, extContext).then();
   context.subscriptions.push(
     vscode.commands.registerCommand('corker.micromamba.create.environment', async () => {
       if (!extContext) {
         vscode.window.showInformationMessage('Open a folder or a workspace');
         return;
       }
-      await lock(() => runCreateEnvironmentCommand(context, extContext));
+      await lock(runCreateEnvironmentCommand, context, extContext);
     }),
     vscode.commands.registerCommand('corker.micromamba.activate.environment', async () => {
       if (!extContext) {
         vscode.window.showInformationMessage('Open a folder or a workspace');
         return;
       }
-      await lock(() => runActivateEnvironmentCommand(context, extContext));
+      await lock(runActivateEnvironmentCommand, context, extContext);
     }),
     vscode.commands.registerCommand('corker.micromamba.deactivate.environment', async () => {
       if (!extContext) {
         vscode.window.showInformationMessage('Open a folder or a workspace');
         return;
       }
-      await lock(() => runDeactivateEnvironmentCommand(context, extContext));
+      await lock(runDeactivateEnvironmentCommand, context, extContext);
     }),
     vscode.commands.registerCommand('corker.micromamba.remove.environment', async () => {
       if (!extContext) {
         vscode.window.showInformationMessage('Open a folder or a workspace');
         return;
       }
-      await lock(() => runRemoveEnvironmentCommand(context, extContext));
+      await lock(runRemoveEnvironmentCommand, context, extContext);
     }),
     vscode.commands.registerCommand('corker.micromamba.clear.all', async () => {
       if (!extContext) {
         vscode.window.showInformationMessage('Open a folder or a workspace');
         return;
       }
-      await lock(() => runClearAllCommand(context, extContext));
+      await lock(runClearAllCommand, context, extContext);
     })
   );
 }

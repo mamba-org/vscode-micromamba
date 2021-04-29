@@ -4,7 +4,6 @@ import * as sh from 'shelljs';
 import * as rimraf from 'rimraf';
 import { ExtensionContext } from './makeExtensionContext';
 import { deactivateMicromambaEnvironment } from './activateMicromambaEnvironment';
-import { refreshContextFlags } from './refreshContextFlags';
 
 export const runClearAllCommand = (
   context: vscode.ExtensionContext,
@@ -26,7 +25,6 @@ export const runClearAllCommand = (
     vscode.window.showErrorMessage(`Can't move directory: ${micromambaDir}`);
     return Promise.resolve();
   }
-  refreshContextFlags(context, extContext);
   return vscode.window.withProgress(
     {
       title: 'Micromamba',

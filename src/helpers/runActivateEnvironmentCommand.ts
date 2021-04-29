@@ -2,7 +2,6 @@
 import * as vscode from 'vscode';
 import { activateMicromambaEnvironment } from './activateMicromambaEnvironment';
 import { pickMicromambaEnvironmentPrefixName } from './pickMicromambaEnvironmentPrefixName';
-import { refreshContextFlags } from './refreshContextFlags';
 
 export const runActivateEnvironmentCommand = async (
   context: vscode.ExtensionContext,
@@ -14,5 +13,4 @@ export const runActivateEnvironmentCommand = async (
   );
   if (!prefixName) return;
   activateMicromambaEnvironment(context, extContext, prefixName);
-  refreshContextFlags(context, extContext);
 };

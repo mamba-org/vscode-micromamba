@@ -12,7 +12,6 @@ import {
   deactivateMicromambaEnvironment,
 } from './activateMicromambaEnvironment';
 import { join } from 'path';
-import { refreshContextFlags } from './refreshContextFlags';
 
 const _ensureMicromambaDir = (extContext: ExtensionContext): void => {
   try {
@@ -76,5 +75,4 @@ export const runCreateEnvironmentCommand = async (
     const message = error.message || `Can't create micromamba environment`;
     vscode.window.showErrorMessage(message);
   }
-  refreshContextFlags(context, extContext);
 };
