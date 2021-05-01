@@ -1,4 +1,4 @@
-import { isWindows } from './infra';
+import { isWindows } from '../helpers/infra';
 import {
   parseMicromambaShellActivateResponse,
   getMicromambaEnvVariables,

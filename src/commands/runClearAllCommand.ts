@@ -2,14 +2,10 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as sh from 'shelljs';
 import * as rimraf from 'rimraf';
-import { ExtensionContext } from './makeExtensionContext';
-import { deactivateMicromambaEnvironment } from './activateMicromambaEnvironment';
+import { CommandLike } from './_definitions';
 
-export const runClearAllCommand = (
-  context: vscode.ExtensionContext,
-  extContext: ExtensionContext
-): Promise<void> => {
-  deactivateMicromambaEnvironment(context, extContext);
+export const runClearAllCommand: CommandLike = ({ extContext, manager }) => {
+  manager.deactivate();
   const { micromambaDir } = extContext;
   const tempDir = `${micromambaDir}_temp`;
   const targetDir = path.join(tempDir, `${Date.now()}`);

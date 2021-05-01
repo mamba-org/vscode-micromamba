@@ -1,21 +1,17 @@
-﻿import { ExtensionContext } from './makeExtensionContext';
 import * as vscode from 'vscode';
 import { join } from 'path';
 import * as sh from 'shelljs';
 import * as rimraf from 'rimraf';
-import { deactivateMicromambaEnvironment } from './activateMicromambaEnvironment';
-import { pickMicromambaEnvironmentPrefixName } from './pickMicromambaEnvironmentPrefixName';
+import { CommandLike } from './_definitions';
+import { pickMicromambaEnvironmentPrefixName } from '../environments';
 
-export const runRemoveEnvironmentCommand = async (
-  context: vscode.ExtensionContext,
-  extContext: ExtensionContext
-): Promise<void> => {
+export const runRemoveEnvironmentCommand: CommandLike = async ({ extContext, manager }) => {
   const prefixName = await pickMicromambaEnvironmentPrefixName(
     extContext,
     'Select environment to remove'
   );
   if (!prefixName) return;
-  deactivateMicromambaEnvironment(context, extContext);
+  manager.deactivate();
   const { micromambaDir } = extContext;
   const tempDir = `${micromambaDir}_temp`;
   const targetDir = join(tempDir, `${Date.now()}`);

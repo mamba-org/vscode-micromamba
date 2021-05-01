@@ -1,12 +1,15 @@
 import * as sh from 'shelljs';
 import * as path from 'path';
-import { ensureMicromamba } from './ensureMicromamba';
+import { ensureMicromamba, isMicromambaInstalled } from './ensureMicromamba';
 import { create, help } from './micromamba';
-import { isMicromambaInstalled } from './isMicromambaInstalled';
 import { getMicromambaEnvVariables } from './getMicromambaEnvVariables';
-import { isWindows } from './infra';
+import { isWindows } from '../helpers/infra';
+import { configureShellJS } from '../helpers/configureShelljs';
+import { ExtensionContext } from '../_definitions';
 
 const tmpDir = path.join(__dirname, 'tmp', path.basename(__filename));
+
+configureShellJS({ micromambaDir: tmpDir } as ExtensionContext);
 
 beforeEach(() => {
   sh.rm('-rf', tmpDir);
@@ -19,9 +22,9 @@ afterEach(() => {
 });
 
 it('scenario1', async () => {
-  expect(isMicromambaInstalled(tmpDir)).toBeFalsy();
+  expect(isMicromambaInstalled()).toBeFalsy();
   await ensureMicromamba(tmpDir);
-  expect(isMicromambaInstalled(tmpDir)).toBeTruthy();
+  expect(isMicromambaInstalled()).toBeTruthy();
   const resx = help(tmpDir);
   expect(resx).not.toBe('');
   sh.ShellString(
@@ -37,11 +40,15 @@ dependencies:
   create({ micromambaDir: tmpDir, micromambaYamlPath: 'mamba.yaml' });
   const actual = sh.ls();
   expect(actual).toContain('envs');
-  const varNames = getMicromambaEnvVariables({
-    micromambaDir: tmpDir,
-    micromambaPath: path.join(tmpDir, isWindows ? 'micromamba.exe' : 'micromamba'),
-    prefixName: 'mamba',
-  }).map((x) => x.name);
+  const varNames = (
+    await getMicromambaEnvVariables(
+      {
+        micromambaDir: tmpDir,
+        micromambaPath: path.join(tmpDir, isWindows ? 'micromamba.exe' : 'micromamba'),
+      },
+      'mamba'
+    )
+  ).map((x) => x.name);
   expect(varNames).toContain('CONDA_PREFIX');
   expect(varNames).toContain('CONDA_SHLVL');
   expect(varNames).toContain('CONDA_DEFAULT_ENV');

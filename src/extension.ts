@@ -1,61 +1,34 @@
 import * as vscode from 'vscode';
-import * as sh from 'shelljs';
 
+import { configureShellJS } from './helpers/configureShelljs';
+import { makeActiveEnvironmentManager } from './environments/makeActiveEnvironmentManager';
+import { makeExtensionContext } from './helpers/makeExtensionContext';
 import {
-  lock,
-  makeExtensionContext,
-  onActivate,
-  runCreateEnvironmentCommand,
-  runActivateEnvironmentCommand,
-  runDeactivateEnvironmentCommand,
-  runRemoveEnvironmentCommand,
-  runClearAllCommand,
-} from './helpers';
+  activateCommands,
+  activateContextFlags,
+  activateDotEnvFile,
+  activateStatusBarItem,
+  activateTerminal,
+  activateWorkspaceState,
+} from './activations';
+import { makeEnvironmentInfo } from './environments/makeEnvironmentInfo';
 
 export function activate(context: vscode.ExtensionContext): void {
-  sh.config.fatal = true;
-  sh.config.silent = true;
-  sh.config.verbose = false;
-  const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-  context.subscriptions.push(statusBarItem);
-  const extContext = makeExtensionContext(statusBarItem);
-  lock(onActivate, context, extContext).then();
+  if (!vscode.workspace.workspaceFolders) {
+    vscode.window.showInformationMessage('Open a folder or a workspace');
+    return;
+  }
+  const extContext = makeExtensionContext(vscode.workspace.workspaceFolders[0]);
+  configureShellJS(extContext);
+  const manager = makeActiveEnvironmentManager();
+  const info$ = makeEnvironmentInfo(extContext, manager);
   context.subscriptions.push(
-    vscode.commands.registerCommand('corker.micromamba.create.environment', async () => {
-      if (!extContext) {
-        vscode.window.showInformationMessage('Open a folder or a workspace');
-        return;
-      }
-      await lock(runCreateEnvironmentCommand, context, extContext);
-    }),
-    vscode.commands.registerCommand('corker.micromamba.activate.environment', async () => {
-      if (!extContext) {
-        vscode.window.showInformationMessage('Open a folder or a workspace');
-        return;
-      }
-      await lock(runActivateEnvironmentCommand, context, extContext);
-    }),
-    vscode.commands.registerCommand('corker.micromamba.deactivate.environment', async () => {
-      if (!extContext) {
-        vscode.window.showInformationMessage('Open a folder or a workspace');
-        return;
-      }
-      await lock(runDeactivateEnvironmentCommand, context, extContext);
-    }),
-    vscode.commands.registerCommand('corker.micromamba.remove.environment', async () => {
-      if (!extContext) {
-        vscode.window.showInformationMessage('Open a folder or a workspace');
-        return;
-      }
-      await lock(runRemoveEnvironmentCommand, context, extContext);
-    }),
-    vscode.commands.registerCommand('corker.micromamba.clear.all', async () => {
-      if (!extContext) {
-        vscode.window.showInformationMessage('Open a folder or a workspace');
-        return;
-      }
-      await lock(runClearAllCommand, context, extContext);
-    })
+    activateCommands(extContext, manager),
+    activateStatusBarItem(manager),
+    activateDotEnvFile(extContext, info$),
+    activateTerminal(context, extContext, info$),
+    activateContextFlags(extContext, info$),
+    activateWorkspaceState(context, manager)
   );
 }
 

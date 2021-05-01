@@ -1,11 +1,9 @@
-import { ExtensionContext } from './makeExtensionContext';
 import * as vscode from 'vscode';
 import * as sh from 'shelljs';
 import { join } from 'path';
-import {
-  readMicromambaEnvironmentFiles,
-  MicromambaEnvironmentFile,
-} from './pickMicromambaEnvironmentFile';
+import { readMicromambaEnvironmentFiles } from './pickMicromambaEnvironmentFile';
+import { ExtensionContext } from '../_definitions';
+import { MicromambaEnvironmentFile } from './_definitions';
 
 export type MicromambaEnvironmentQuickPickItem = {
   label: string;

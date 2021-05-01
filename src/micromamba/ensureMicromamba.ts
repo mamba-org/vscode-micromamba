@@ -1,7 +1,11 @@
+import * as sh from 'shelljs';
 import { downloadMicromamba } from './downloadMicromamba';
-import { isMicromambaInstalled } from './isMicromambaInstalled';
+
+export const isMicromambaInstalled = (): boolean => {
+  return !!sh.which('micromamba');
+};
 
 export const ensureMicromamba = async (cwd: string): Promise<void> => {
-  if (isMicromambaInstalled(cwd)) return;
+  if (isMicromambaInstalled()) return;
   await downloadMicromamba(cwd);
 };

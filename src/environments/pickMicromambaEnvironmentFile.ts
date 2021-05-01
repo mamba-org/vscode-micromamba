@@ -1,10 +1,11 @@
 import { join } from 'path';
 import * as vscode from 'vscode';
 import * as sh from 'shelljs';
-import { isWindows } from './infra';
-import { ExtensionContext } from './makeExtensionContext';
+import { isWindows } from '../helpers/infra';
 import * as fs from 'fs';
 import * as YAML from 'yaml';
+import { ExtensionContext } from '../_definitions';
+import { MicromambaEnvironmentFile, MicromambaEnvironmentFileContent } from './_definitions';
 
 const nodejs = `# Micromamba environment file
 # https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
@@ -102,18 +103,6 @@ const templates = isWindows
     };
 
 const defaultFileName = 'environment.yml';
-
-export type MicromambaEnvironmentFileContent = {
-  readonly name: string;
-  readonly channels: string[];
-  readonly dependencies: string[];
-};
-
-export type MicromambaEnvironmentFile = {
-  readonly fileName: string;
-  readonly filePath: string;
-  readonly content: MicromambaEnvironmentFileContent;
-};
 
 export const readMicromambaEnvironmentFile = async (
   extContext: ExtensionContext,
