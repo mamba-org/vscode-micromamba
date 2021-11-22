@@ -4,7 +4,7 @@ import { ensureMicromamba, isMicromambaInstalled } from './ensureMicromamba';
 import { create, help } from './micromamba';
 import { getMicromambaEnvVariables } from './getMicromambaEnvVariables';
 import { isWindows } from '../helpers/infra';
-import { configureShellJS } from '../helpers/configureShelljs';
+import { configureShellJS } from '../helpers/configureShellJS';
 import { ExtensionContext } from '../_definitions';
 
 const tmpDir = path.join(__dirname, 'tmp', path.basename(__filename));

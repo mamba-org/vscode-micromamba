@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { configureShellJS } from './helpers/configureShelljs';
+import { configureShellJS } from './helpers/configureShellJS';
 import { makeActiveEnvironmentManager } from './environments/makeActiveEnvironmentManager';
 import { makeExtensionContext } from './helpers/makeExtensionContext';
 import {
