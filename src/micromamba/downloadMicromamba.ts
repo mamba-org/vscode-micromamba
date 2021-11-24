@@ -4,11 +4,41 @@ import { Writable } from 'stream';
 import * as tar from 'tar';
 import * as bz2 from 'unbzip2-stream';
 import * as sh from 'shelljs';
+import { URL } from 'url';
 
-export const _downloadMicromamba = (url: string, tar: Writable): Promise<void> => {
+export const _downloadMicromamba = async (url: string, tar: Writable): Promise<void> => {
+  try {
+    await _downloadMicromamba1(url, tar);
+  } catch (err) {
+    await _downloadMicromamba2(url, tar);
+  }
+};
+
+export const _downloadMicromamba1 = (url: string, tar: Writable): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
     try {
       const req = https.get(url, (res) => res.pipe(bz2()).pipe(tar));
+      req.on('error', (err) => reject(err));
+      tar.on('error', (err) => reject(err));
+      tar.on('finish', () => resolve());
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+export const _downloadMicromamba2 = (url: string, tar: Writable): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
+    try {
+      const u = new URL(url);
+      const req = https.get(
+        {
+          host: u.host,
+          path: u.pathname,
+          rejectUnauthorized: false,
+        },
+        (res) => res.pipe(bz2()).pipe(tar)
+      );
       req.on('error', (err) => reject(err));
       tar.on('error', (err) => reject(err));
       tar.on('finish', () => resolve());
