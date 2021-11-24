@@ -16,13 +16,13 @@ jobs:
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
         with:
-          node-version: 12
+          node-version: 14
       - run: npm ci
       - run: npm run lint
-      - uses: GabrielBB/xvfb-action@v1.0
+      - uses: GabrielBB/xvfb-action@master
         with:
           run: npm run test -- --coverage
       - uses: coverallsapp/github-action@master
@@ -38,18 +38,15 @@ jobs:
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
         with:
-          node-version: 12
+          node-version: 14
       - run: npm ci
       - run: npm run compile
       - uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.github_token }}
           parallel-finished: true
-      - uses: JCofman/vscodeaction@master
-        env:
-          PUBLISHER_TOKEN: ${{ secrets.PUBLISHER_TOKEN }}
-        with:
-          args: publish -p $PUBLISHER_TOKEN
+      - run: npm i -g vsce
+      - run: vsce publish -p ${{ secrets.PUBLISHER_TOKEN }}
