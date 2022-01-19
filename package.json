@@ -75,7 +75,7 @@
   "dependencies": {
     "follow-redirects": "^1.14.7",
     "rxjs": "^7.0.0",
-    "shelljs": "^0.8.4",
+    "shelljs": "^0.8.5",
     "tar": "6.1.9",
     "unbzip2-stream": "1.4.3",
     "vscode-codicons": "^0.0.13",
