@@ -31,7 +31,7 @@ Inspired by [Robocorp](https://robocorp.com) RPA developer tools:
 ### Micromamba: create environment
 
 This command creates a file - environment.yml describing configuration.
-The environment.yml is a [mamba environment file](https://mamba.readthedocs.io/en/latest/micromamba.html#yaml-environment-files)
+The environment.yml is a [mamba environment file](https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html#yaml-spec-files)
 The extension comes with a number of templates but you could change it to your needs and re-run init command.
 
 1. Open command palette (Ctrl+Shift+P)
