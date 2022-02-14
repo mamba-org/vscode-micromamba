@@ -73,7 +73,7 @@
     "push-release": "git push --follow-tags"
   },
   "dependencies": {
-    "follow-redirects": "^1.14.7",
+    "follow-redirects": "^1.14.8",
     "rxjs": "^7.0.0",
     "shelljs": "^0.8.4",
     "tar": "6.1.9",
