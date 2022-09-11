@@ -22,9 +22,9 @@ afterEach(() => {
 });
 
 it('scenario1', async () => {
-  expect(isMicromambaInstalled()).toBeFalsy();
+  expect(isMicromambaInstalled(tmpDir)).toBeFalsy();
   await ensureMicromamba(tmpDir);
-  expect(isMicromambaInstalled()).toBeTruthy();
+  expect(isMicromambaInstalled(tmpDir)).toBeTruthy();
   const resx = help(tmpDir);
   expect(resx).not.toBe('');
   sh.ShellString(

@@ -6,25 +6,40 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
+### 0.1.10
+
+* Fixed issue #7
+
+### 0.1.9
+
+* Ignore micromamba certificate errors
+
 ### 0.1.8
+
 * License changed to BSD-3
 
 ### 0.1.7
+
 * DotEnv file generator added
 
 ### 0.1.6
+
 * Show only commands available in current context
 
 ### 0.1.5
+
 * Improve environment template headers
 
 ### 0.1.4
+
 * --ssl-verify flag deprecated
 
 ### 0.1.3
+
 * .gitignore added to .micromamba directory
 
 ### 0.1.2
+
 * Align commands with micromamba: create, activate, deactivate, remove, clear all
 
 ### 0.0.8
