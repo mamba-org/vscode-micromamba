@@ -1,11 +1,11 @@
-# vscode-micromamba 
+# vscode-micromamba
 
-[![Build Status](https://github.com/mamba-org/vscode-micromamba/workflows/ci/badge.svg?branch=main)](https://github.com/mamba-org/vscode-micromamba/tree/main) [![Coverage Status](https://coveralls.io/repos/github/mamba-org/vscode-micromamba/badge.svg?branch=main)](https://coveralls.io/github/mamba-org/vscode-micromamba?branch=main) [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/corker.vscode-micromamba?color=success&label=Visual%20Studio%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba) 
+[![Build Status](https://github.com/mamba-org/vscode-micromamba/workflows/ci/badge.svg?branch=main)](https://github.com/mamba-org/vscode-micromamba/tree/main) [![Coverage Status](https://coveralls.io/repos/github/mamba-org/vscode-micromamba/badge.svg?branch=main)](https://coveralls.io/github/mamba-org/vscode-micromamba?branch=main) [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/corker.vscode-micromamba?color=success&label=Visual%20Studio%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba)
 
 ---
 
-
 Content
+
 - [vscode-micromamba](#vscode-micromamba)
   - [The Aim](#the-aim)
   - [Commands](#commands)
@@ -20,11 +20,11 @@ Content
 
 Provide a convenient way to install developer tools in VSCode workspaces from [conda-forge](https://conda-forge.org) with [micromamba](https://mamba.readthedocs.io). Get NodeJS, Go, Rust, Python or JupyterLab installed by running a single command.
 
-
 Inspired by [Robocorp](https://robocorp.com) RPA developer tools:
- - [RCC](https://robocorp.com/docs/rcc/overview) - a command-line tool to run software robots and integrate with the Robocorp Cloud
- - [Robocorp Lab](https://robocorp.com/docs/developer-tools/robocorp-lab/overview) - a JupyterLab based IDE to build software robots
- - [Robocorp Code](https://robocorp.com/docs/developer-tools/visual-studio-code/overview) - a VSCode extension to build software robots
+
+- [RCC](https://robocorp.com/docs/rcc/overview) - a command-line tool to run software robots and integrate with the Robocorp Cloud
+- [Robocorp Lab](https://robocorp.com/docs/developer-tools/robocorp-lab/overview) - a JupyterLab based IDE to build software robots
+- [Robocorp Code](https://robocorp.com/docs/developer-tools/visual-studio-code/overview) - a VSCode extension to build software robots
 
 ## Commands
 
@@ -73,13 +73,42 @@ Clear all command removes micromamba, packages, and reset environment to the ini
 DotEnv file is a convenient way to provide environment variables to other extensions or user scripts.
 Each time user creates or activates an environment there is a ~/.micromamba/.env.{prefix-name} file created.
 
+### Multi-root workspaces
+
+With multi-root workspaces all operations will work the same way as if you open the first workspace folder in VSCode.
+The idea is that the first workspace folder is a target folder.
+
+Let's say you have a ```project.code-workspace``` with content:
+
+```json
+{
+  "folders": [
+    {
+      "path": "folderA"
+    },
+    {
+      "path": "folderB"
+    }
+  ]
+}
+```
+
+Assuming folders are already created, when you open the workspace in VSCode and command to create a micromamba environment, you'll see the following directory structure:
+
+```text
+.
+├── folderA
+│   ├── .micromamba
+│   └── environment.yml
+├── folderB
+```
+
 ## How to get it?
 
 Simply open [Micromamba - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba) and click "Install".
 Alternatively open Visual Studio Code, go to the extension view and search for "Micromamba".
- 
-For detailed releases and migration help, please see [releases](https://github.com/mamba-org/vscode-micromamba/releases).
 
+For detailed releases and migration help, please see [releases](https://github.com/mamba-org/vscode-micromamba/releases).
 
 ## Maintainers
 
