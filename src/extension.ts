@@ -12,10 +12,11 @@ import {
   activateWorkspaceState,
 } from './activations';
 import { makeEnvironmentInfo } from './environments/makeEnvironmentInfo';
+import { activateProcessEnv } from './activations/activateProcessEnv';
 
 export function activate(context: vscode.ExtensionContext): void {
   if (!vscode.workspace.workspaceFolders) {
-    vscode.window.showInformationMessage('Open a folder or a workspace');
+    vscode.window.showInformationMessage('micromamba: Open a folder or a workspace');
     return;
   }
   const extContext = makeExtensionContext(vscode.workspace.workspaceFolders[0]);
@@ -27,6 +28,7 @@ export function activate(context: vscode.ExtensionContext): void {
     activateStatusBarItem(manager),
     activateDotEnvFile(extContext, info$),
     activateTerminal(context, extContext, info$),
+    activateProcessEnv(extContext, info$),
     activateContextFlags(extContext, info$),
     activateWorkspaceState(context, manager)
   );

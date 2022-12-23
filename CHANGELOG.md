@@ -6,6 +6,10 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
+### 0.1.11
+
+* Make environment available for extensions
+
 ### 0.1.10
 
 * Fixed issue #7

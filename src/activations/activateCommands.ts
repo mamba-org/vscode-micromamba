@@ -4,6 +4,15 @@ import * as vscode from 'vscode';
 import { CommandLike, commands } from '../commands';
 import { ActiveEnvironmentManager, DisposableLike, ExtensionContext } from '../_definitions';
 
+async function askToReloadWindow(): Promise<void> {
+  const action = 'Reload';
+  const result = await vscode.window.showInformationMessage(
+    'micromamba: Reload VSCode window to apply changes',
+    action
+  );
+  if (result === action) vscode.commands.executeCommand('workbench.action.reloadWindow');
+}
+
 export const activateCommands = (
   extContext: ExtensionContext,
   manager: ActiveEnvironmentManager
@@ -14,12 +23,15 @@ export const activateCommands = (
         vscode.commands.registerCommand(key, () => subscriber.next(command))
       )
     );
-    return () => {
-      dis.dispose();
-    };
+    return () => dis.dispose();
   });
   const sub = commands$
-    .pipe(exhaustMap((x: CommandLike) => x({ extContext, manager })))
+    .pipe(
+      exhaustMap(async (x: CommandLike) => {
+        await x({ extContext, manager });
+        askToReloadWindow().then();
+      })
+    )
     .subscribe();
   return { dispose: () => sub.unsubscribe() };
 };
