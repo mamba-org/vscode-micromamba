@@ -11,7 +11,7 @@
           "owner": "custom",
           "pattern": [
             {
-              "regexp": "^PATTERN WON'T MATCH, BUT NEEDED TO BE A VALID PROBLEM MATCHER$",
+              "regexp": "",
               "file": 1,
               "location": 2,
               "message": 3
@@ -19,8 +19,8 @@
           ],
           "background": {
             "activeOnStart": true,
-            "beginsPattern": "^asset extension.js",
-            "endsPattern": "compiled successfully in"
+            "beginsPattern": "build started",
+            "endsPattern": "build finished"
           }
         }
       ]

@@ -1,37 +1,37 @@
-import * as path from 'path';
-import * as sh from 'shelljs';
-import { downloadMicromamba } from './downloadMicromamba';
+import * as path from 'path'
+import sh from '../helpers/sh'
+import { downloadMicromamba } from './downloadMicromamba'
 
-export const _isMicromambaInstalled = (path: string): boolean => {
-  return sh.test('-f', path);
-};
+export const _isMicromambaInstalled = (path: string) => {
+  return sh.testf(path)
+}
 
-export const isMicromambaInstalledWin = (cwd: string): boolean => {
-  return _isMicromambaInstalled(path.join(cwd, 'micromamba.exe'));
-};
+export const isMicromambaInstalledWin = (cwd: string) => {
+  return _isMicromambaInstalled(path.join(cwd, 'micromamba.exe'))
+}
 
-export const isMicromambaInstalledMac = (cwd: string): boolean => {
-  return _isMicromambaInstalled(path.join(cwd, 'micromamba'));
-};
+export const isMicromambaInstalledMac = (cwd: string) => {
+  return _isMicromambaInstalled(path.join(cwd, 'micromamba'))
+}
 
-export const isMicromambaInstalledLinux = (cwd: string): boolean => {
-  return _isMicromambaInstalled(path.join(cwd, 'micromamba'));
-};
+export const isMicromambaInstalledLinux = (cwd: string) => {
+  return _isMicromambaInstalled(path.join(cwd, 'micromamba'))
+}
 
-export const isMicromambaInstalled = (cwd: string): boolean => {
+export const isMicromambaInstalled = (cwd: string) => {
   switch (process.platform) {
     case 'linux':
-      return isMicromambaInstalledLinux(cwd);
+      return isMicromambaInstalledLinux(cwd)
     case 'win32':
-      return isMicromambaInstalledWin(cwd);
+      return isMicromambaInstalledWin(cwd)
     case 'darwin':
-      return isMicromambaInstalledMac(cwd);
+      return isMicromambaInstalledMac(cwd)
     default:
-      throw new Error(`Unsuported platform ${process.platform}`);
+      throw new Error(`Unsuported platform ${process.platform}`)
   }
-};
+}
 
 export const ensureMicromamba = async (cwd: string): Promise<void> => {
-  if (isMicromambaInstalled(cwd)) return;
-  await downloadMicromamba(cwd);
-};
+  if (await isMicromambaInstalled(cwd)) return
+  await downloadMicromamba(cwd)
+}

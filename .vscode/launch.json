@@ -18,7 +18,7 @@
       "runtimeArgs": ["run", "test-watch"],
       "runtimeExecutable": "npm",
       "skipFiles": ["<node_internals>/**"],
-      "type": "pwa-node"
+      "type": "node"
     },
     {
       "name": "Launch Extension (development)",

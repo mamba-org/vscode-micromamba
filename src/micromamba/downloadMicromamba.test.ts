@@ -1,34 +1,34 @@
-import * as sh from 'shelljs';
-import * as path from 'path';
+import * as path from 'path'
+import sh from '../helpers/sh'
 import {
   downloadMicromambaLinux,
   downloadMicromambaMac,
   downloadMicromambaWin,
-} from './downloadMicromamba';
+} from './downloadMicromamba'
 
-const tmpDir = path.join(__dirname, 'tmp', path.basename(__filename));
+const tmpDir = path.join(__dirname, 'tmp', path.basename(__filename))
 
 describe('downloadMicromamba', () => {
-  beforeEach(() => {
-    sh.rm('-rf', tmpDir);
-    sh.mkdir('-p', tmpDir);
-  });
+  beforeEach(async () => {
+    await sh.rmrf(tmpDir)
+    await sh.mkdirp(tmpDir)
+  })
 
   it('win32', async () => {
-    await downloadMicromambaWin(tmpDir);
-    const actual = sh.ls(tmpDir).toString();
-    expect(actual).toBe('micromamba.exe');
-  }, 10000);
+    await downloadMicromambaWin(tmpDir)
+    const actual = await sh.ls(tmpDir)
+    expect(actual).toEqual(['micromamba.exe'])
+  }, 10000)
 
   it('linux', async () => {
-    await downloadMicromambaLinux(tmpDir);
-    const actual = sh.ls(tmpDir).toString();
-    expect(actual).toBe('micromamba');
-  }, 10000);
+    await downloadMicromambaLinux(tmpDir)
+    const actual = await sh.ls(tmpDir)
+    expect(actual).toEqual(['micromamba'])
+  }, 10000)
 
   it('darwin', async () => {
-    await downloadMicromambaMac(tmpDir);
-    const actual = sh.ls(tmpDir).toString();
-    expect(actual).toBe('micromamba');
-  }, 10000);
-});
+    await downloadMicromambaMac(tmpDir)
+    const actual = await sh.ls(tmpDir)
+    expect(actual).toEqual(['micromamba'])
+  }, 10000)
+})

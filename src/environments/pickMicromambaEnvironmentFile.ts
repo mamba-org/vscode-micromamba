@@ -1,11 +1,11 @@
-import { join } from 'path';
-import * as vscode from 'vscode';
-import * as sh from 'shelljs';
-import { isWindows } from '../helpers/infra';
-import * as fs from 'fs';
-import * as YAML from 'yaml';
-import { ExtensionContext } from '../_definitions';
-import { MicromambaEnvironmentFile, MicromambaEnvironmentFileContent } from './_definitions';
+import { join } from 'path'
+import * as vscode from 'vscode'
+import { isWindows } from '../helpers/infra'
+import * as fs from 'fs'
+import * as YAML from 'yaml'
+import { ExtensionContext } from '../_definitions'
+import { MicromambaEnvironmentFile, MicromambaEnvironmentFileContent } from './_definitions'
+import sh from '../helpers/sh'
 
 const nodejs = `# Micromamba environment file
 # https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
@@ -17,7 +17,7 @@ channels:
 
 dependencies:
   - nodejs
-`;
+`
 
 const go = `# Micromamba environment file
 # https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
@@ -29,7 +29,7 @@ channels:
 
 dependencies:
   - go
-`;
+`
 
 const rust = `# Micromamba environment file
 # https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
@@ -41,7 +41,7 @@ channels:
 
 dependencies:
   - rust
-`;
+`
 
 const python = `# Micromamba environment file
 # https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
@@ -53,7 +53,7 @@ channels:
 
 dependencies:
   - python
-`;
+`
 
 const dotnet = `# Micromamba environment file
 # https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
@@ -65,7 +65,7 @@ channels:
 
 dependencies:
   - dotnet
-`;
+`
 
 const jupyterlab = `# Micromamba environment file
 # https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
@@ -83,9 +83,9 @@ dependencies:
   - pytest-check-links
   - python
   - yarn
-`;
+`
 
-const templates = isWindows
+const templates: { [key: string]: string } = isWindows
   ? {
       nodejs,
       go,
@@ -100,63 +100,62 @@ const templates = isWindows
       rust,
       python,
       jupyterlab,
-    };
+    }
 
-const defaultFileName = 'environment.yml';
+const defaultFileName = 'environment.yml'
 
 export const readMicromambaEnvironmentFile = async (
   extContext: ExtensionContext,
-  fileName: string
+  fileName: string,
 ): Promise<MicromambaEnvironmentFile | undefined> => {
-  const filePath = join(extContext.rootDir, fileName);
+  const filePath = join(extContext.rootDir, fileName)
   try {
-    const contentYaml = await fs.promises.readFile(filePath, 'utf8');
-    const content = YAML.parse(contentYaml) as MicromambaEnvironmentFileContent;
-    return { content, fileName, filePath };
+    const contentYaml = await fs.promises.readFile(filePath, 'utf8')
+    const content = YAML.parse(contentYaml) as MicromambaEnvironmentFileContent
+    return { content, fileName, filePath }
   } catch (ignore) {
-    return undefined;
+    return undefined
   }
-};
+}
 
 export const readMicromambaEnvironmentFiles = async (
-  extContext: ExtensionContext
+  extContext: ExtensionContext,
 ): Promise<MicromambaEnvironmentFile[]> => {
-  const fileNames = sh
-    .ls(extContext.rootDir)
+  const fileNames = (await sh.ls(extContext.rootDir))
     .filter((x) => x === defaultFileName || x.toLowerCase().startsWith('environment'))
-    .filter((x) => x.endsWith('.yml') || x.endsWith('.yaml'));
-  const promises = fileNames.map((x) => readMicromambaEnvironmentFile(extContext, x));
-  const environmentFiles = await Promise.all(promises);
-  return environmentFiles.filter((x) => !!x).map((x) => x as MicromambaEnvironmentFile);
-};
+    .filter((x) => x.endsWith('.yml') || x.endsWith('.yaml'))
+  const promises = fileNames.map((x) => readMicromambaEnvironmentFile(extContext, x))
+  const environmentFiles = await Promise.all(promises)
+  return environmentFiles.filter((x) => !!x).map((x) => x as MicromambaEnvironmentFile)
+}
 
 export const pickMicromambaEnvironmentFile = async (
-  extContext: ExtensionContext
+  extContext: ExtensionContext,
 ): Promise<MicromambaEnvironmentFile | undefined> => {
-  const files = await readMicromambaEnvironmentFiles(extContext);
+  const files = await readMicromambaEnvironmentFiles(extContext)
   switch (files.length) {
     case 0: {
-      const placeHolder = 'Select an environment template';
-      const key = await vscode.window.showQuickPick(Object.keys(templates), { placeHolder });
+      const placeHolder = 'Select an environment template'
+      const key = await vscode.window.showQuickPick(Object.keys(templates), { placeHolder })
       if (key) {
-        const content = templates[key];
-        const environmentFilePath = join(extContext.rootDir, defaultFileName);
-        sh.ShellString(content).to(environmentFilePath);
-        return await readMicromambaEnvironmentFile(extContext, defaultFileName);
+        const content = templates[key]
+        const environmentFilePath = join(extContext.rootDir, defaultFileName)
+        await sh.writeFile(environmentFilePath, content)
+        return await readMicromambaEnvironmentFile(extContext, defaultFileName)
       }
-      return undefined;
+      return undefined
     }
     case 1:
-      return files[0];
+      return files[0]
     default: {
-      const placeHolder = 'Select an environment file';
+      const placeHolder = 'Select an environment file'
       const items = files.map((data) => ({
         label: data.fileName,
         description: `[${data.content.name}]`,
         data,
-      }));
-      const item = await vscode.window.showQuickPick(items, { placeHolder });
-      return item ? item.data : undefined;
+      }))
+      const item = await vscode.window.showQuickPick(items, { placeHolder })
+      return item ? item.data : undefined
     }
   }
-};
+}

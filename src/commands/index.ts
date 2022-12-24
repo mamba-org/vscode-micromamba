@@ -1,2 +1,2 @@
-export * from './_definitions';
-export * from './commands';
+export * from './_definitions'
+export * from './commands'

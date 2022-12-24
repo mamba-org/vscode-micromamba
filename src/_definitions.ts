@@ -1,20 +1,20 @@
-import { Observable } from 'rxjs';
-import { EnvironmentPrefix } from './environments';
+import { Observable } from 'rxjs'
+import { EnvironmentPrefix } from './environments'
 
 export type ExtensionContext = {
-  rootDir: string;
-  micromambaDir: string;
-  micromambaPath: string;
-};
+  rootDir: string
+  micromambaDir: string
+  micromambaPath: string
+}
 
-export type ActiveEnvironmentPrefix = EnvironmentPrefix | undefined;
+export type ActiveEnvironmentPrefix = EnvironmentPrefix | undefined
 
 export interface DisposableLike {
-  dispose: () => void;
+  dispose: () => void
 }
 
 export interface ActiveEnvironmentManager {
-  readonly prefix$: Observable<ActiveEnvironmentPrefix>;
-  activate(prefix: EnvironmentPrefix): void;
-  deactivate(): void;
+  readonly prefix$: Observable<ActiveEnvironmentPrefix>
+  activate(prefix: EnvironmentPrefix): void
+  deactivate(): void
 }

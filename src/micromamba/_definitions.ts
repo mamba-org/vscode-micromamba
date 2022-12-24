@@ -1,6 +1,6 @@
 export interface EnvironmentVariable {
-  readonly name: string;
-  readonly value: string;
+  readonly name: string
+  readonly value: string
 }
 
-export type EnvironmentVariables = Array<EnvironmentVariable>;
+export type EnvironmentVariables = Array<EnvironmentVariable>

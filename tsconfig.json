@@ -1,26 +1,18 @@
 {
   "compilerOptions": {
-    "alwaysStrict": true,
     "module": "commonjs",
-    "moduleResolution": "node",
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "target": "es6",
+    "target": "ES2019",
     "outDir": "out",
-    "lib": ["es6", "es7"],
+    "lib": ["ES2019"],
     "sourceMap": true,
-    "strictNullChecks": true,
     "rootDir": ".",
-    "plugins": [
-      {
-        "name": "typescript-tslint-plugin",
-        "alwaysShowRuleFailuresAsWarnings": false,
-        "ignoreDefinitionFiles": true,
-        "suppressWhileTypeErrorsPresent": false,
-        "mockTypeScriptVersion": false
-      }
-    ]
+    "strict": true /* enable all strict type-checking options */,
+    "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
+    "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
+    "noUnusedParameters": true /* Report errors on unused parameters. */,
+    "noUnusedLocals": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
   },
-  "include": ["src/**/*"],
-  "exclude": ["__mocks__", "node_modules", "out", "tests"]
+  "exclude": ["node_modules", "out"]
 }

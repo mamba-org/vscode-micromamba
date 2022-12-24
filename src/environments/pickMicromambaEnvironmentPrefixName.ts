@@ -1,19 +1,19 @@
-import * as vscode from 'vscode';
-import * as sh from 'shelljs';
-import { join } from 'path';
-import { readMicromambaEnvironmentFiles } from './pickMicromambaEnvironmentFile';
-import { ExtensionContext } from '../_definitions';
-import { MicromambaEnvironmentFile } from './_definitions';
+import * as vscode from 'vscode'
+import { join } from 'path'
+import { readMicromambaEnvironmentFiles } from './pickMicromambaEnvironmentFile'
+import { ExtensionContext } from '../_definitions'
+import { MicromambaEnvironmentFile } from './_definitions'
+import sh from '../helpers/sh'
 
 export type MicromambaEnvironmentQuickPickItem = {
-  label: string;
-  description: string;
-  data: MicromambaEnvironmentFile;
-};
+  label: string
+  description: string
+  data: MicromambaEnvironmentFile
+}
 
 const mapToQuickPickItems = (
   files: MicromambaEnvironmentFile[],
-  prefixNames: string[]
+  prefixNames: string[],
 ): MicromambaEnvironmentQuickPickItem[] => {
   return files
     .filter((x) => prefixNames.find((p) => p === x.content.name))
@@ -21,35 +21,37 @@ const mapToQuickPickItems = (
       label: data.fileName,
       description: `[${data.content.name}]`,
       data,
-    }));
-};
+    }))
+}
 
 export const findMicromambaEnvironmentQuickPickItems = async (
-  extContext: ExtensionContext
+  extContext: ExtensionContext,
 ): Promise<MicromambaEnvironmentQuickPickItem[]> => {
-  const names = readMicromambaEnvironmentPrefixNames(extContext);
-  const files = await readMicromambaEnvironmentFiles(extContext);
-  return mapToQuickPickItems(files, names);
-};
+  const names = await readMicromambaEnvironmentPrefixNames(extContext)
+  const files = await readMicromambaEnvironmentFiles(extContext)
+  return mapToQuickPickItems(files, names)
+}
 
-export const readMicromambaEnvironmentPrefixNames = (extContext: ExtensionContext): string[] => {
-  const envsPath = join(extContext.micromambaDir, 'envs');
-  return sh.test('-d', envsPath) ? sh.ls(envsPath) : [];
-};
+export const readMicromambaEnvironmentPrefixNames = async (
+  extContext: ExtensionContext,
+): Promise<string[]> => {
+  const envsPath = join(extContext.micromambaDir, 'envs')
+  return (await sh.testd(envsPath)) ? await sh.ls(envsPath) : []
+}
 
 export const pickMicromambaEnvironmentPrefixName = async (
   extContext: ExtensionContext,
-  placeHolder: string
+  placeHolder: string,
 ): Promise<string | undefined> => {
-  const items = await findMicromambaEnvironmentQuickPickItems(extContext);
+  const items = await findMicromambaEnvironmentQuickPickItems(extContext)
   switch (items.length) {
     case 0:
-      return undefined;
+      return undefined
     case 1:
-      return items[0].data.content.name;
+      return items[0].data.content.name
     default: {
-      const item = await vscode.window.showQuickPick(items, { placeHolder });
-      return item ? item.data.content.name : undefined;
+      const item = await vscode.window.showQuickPick(items, { placeHolder })
+      return item ? item.data.content.name : undefined
     }
   }
-};
+}

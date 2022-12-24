@@ -3,9 +3,9 @@ name: ci
 on:
   workflow_dispatch:
   push:
-    branches: [ '**' ]
+    branches: ['**']
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: 14
+          node-version: 16
       - run: npm ci
       - run: npm run lint
       - uses: GabrielBB/xvfb-action@master

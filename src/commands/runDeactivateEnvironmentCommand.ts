@@ -1,5 +1,5 @@
-import { CommandLike } from './_definitions';
+import { CommandLike } from './_definitions'
 
 export const runDeactivateEnvironmentCommand: CommandLike = async ({ manager }) => {
-  manager.deactivate();
-};
+  manager.deactivate()
+}
