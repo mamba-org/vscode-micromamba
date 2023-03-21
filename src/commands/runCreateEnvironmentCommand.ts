@@ -35,11 +35,11 @@ const _ensureMicromamba = async (extContext: ExtensionContext): Promise<void> =>
   }
 }
 
-const _createEnvironment = async (environmentFile: MicromambaEnvironmentFile): Promise<void> => {
+const _createEnvironment = async (extContext: ExtensionContext, environmentFile: MicromambaEnvironmentFile): Promise<void> => {
   try {
     const workspaceFolder = vscode.workspace.workspaceFolders?.[0]
     if (!workspaceFolder) return Promise.resolve()
-    const task = makeMicromambaCreateEnvironmentTask(environmentFile.fileName, workspaceFolder)
+    const task = makeMicromambaCreateEnvironmentTask(extContext, environmentFile.fileName, workspaceFolder)
     const value = await vscode.tasks.executeTask(task)
     await new Promise<void>((resolve) => {
       const dis = vscode.tasks.onDidEndTask((e) => {
@@ -60,7 +60,7 @@ export const runCreateEnvironmentCommand: CommandLike = async ({ extContext, man
     if (!environmentFile) return
     _ensureMicromambaDir(extContext)
     await _ensureMicromamba(extContext)
-    await _createEnvironment(environmentFile)
+    await _createEnvironment(extContext, environmentFile)
     manager.activate(environmentFile.content.name)
   } catch (error) {
     const message = isNativeError(error) ? error.message : `Can't create micromamba environment`
