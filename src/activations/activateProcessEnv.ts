@@ -4,11 +4,12 @@ import { Observable } from 'rxjs'
 import { DisposableLike, ExtensionContext } from '../_definitions'
 import { EnvironmentInfo } from '../environments'
 
+const originalPath = process.env[pathKey]
+
 export function activateProcessEnv(
   extContext: ExtensionContext,
   info$: Observable<EnvironmentInfo>,
 ): DisposableLike {
-  const originalPath = process.env[pathKey]
   const sub = info$.subscribe((info) => {
     if (info.ok) {
       info.vars.forEach((x) => (process.env[x.name] = x.value))

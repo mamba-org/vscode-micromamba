@@ -30,12 +30,7 @@ export const runClearAllCommand: CommandLike = async ({ extContext, manager }) =
     async (progress) => {
       progress.report({ message: 'Deleting micromamba files' })
       try {
-        await new Promise<void>((resolve, reject) =>
-          rimraf(tempDir, (error) => {
-            if (error) reject(error)
-            else resolve()
-          }),
-        )
+        await rimraf(tempDir)
       } catch (ignore) {
         vscode.window.showErrorMessage(`Can't clear files in: ${tempDir}`)
       }

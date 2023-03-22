@@ -57,7 +57,6 @@ const sh = {
   chmodR,
   chmod,
   writeFile,
-  env: process.env,
 }
 
 export default sh

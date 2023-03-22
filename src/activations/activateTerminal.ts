@@ -13,6 +13,7 @@ export function activateTerminal(
   const { environmentVariableCollection: col } = context
   const sub = info$.subscribe((info: EnvironmentInfo) => {
     col.clear()
+    col.persistent = false
     if (info.ok) {
       info.vars.forEach((x) => col.replace(x.name, x.value))
     } else {

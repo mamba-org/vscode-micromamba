@@ -21,7 +21,6 @@ export function activate(context: vscode.ExtensionContext): void {
   }
   const extContext = makeExtensionContext(vscode.workspace.workspaceFolders[0])
   configureShellJS(extContext)
-  setTimeout(() => configureShellJS(extContext), 0)
   const manager = makeActiveEnvironmentManager()
   const info$ = makeEnvironmentInfo(extContext, manager)
   context.subscriptions.push(

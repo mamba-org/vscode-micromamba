@@ -37,12 +37,7 @@ export const runRemoveEnvironmentCommand: CommandLike = async ({ extContext, man
     async (progress) => {
       progress.report({ message: 'Deleting micromamba temp files' })
       try {
-        await new Promise<void>((resolve, reject) =>
-          rimraf(tempDir, (error) => {
-            if (error) reject(error)
-            else resolve()
-          }),
-        )
+        await rimraf(tempDir)
       } catch (ignore) {
         vscode.window.showErrorMessage(`Can't delete files in: ${tempDir}`)
       }
