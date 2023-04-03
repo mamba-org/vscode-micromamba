@@ -43,6 +43,6 @@ The ultimate test is to actually use it in our real day-to-day working environme
   ```
   $ cd ~/.vscode/extensions
   $ mv corker.vscode-micromamba-2.7.0 vscode.orig
-  $ ln -s corker.vscode-micromamba-2.7.0 your-local-vscode-micromamba
+  $ ln -s your-local-vscode-micromamba corker.vscode-micromamba-2.7.0
   ```
   restore vscode.orig when you are done testing.
