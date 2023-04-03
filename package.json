@@ -30,7 +30,7 @@
   "main": "./out/extension",
   "icon": "images/vscode-micromamba.png",
   "extensionKind": [
-    "ui"
+    "workspace"
   ],
   "activationEvents": [
     "*"
