@@ -6,6 +6,14 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
+### 0.1.15
+
+* Fix root dir resolution for WSL2
+
+### 0.1.14
+
+* Fix installing extension on remote server via SSH
+
 ### 0.1.12
 
 * Fix create environment double run in terminal

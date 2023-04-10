@@ -11,6 +11,38 @@ export const getMicromambaCreateEnvironmentArgs = (environmentFileName: string):
   '--yes',
 ]
 
+export function makeProcess$(extContext: ExtensionContext, environmentFileName: string) {
+  return new Observable<string>((o) => {
+    const child = spawn(extContext.micromambaPath, [
+      'create',
+      '--file',
+      environmentFileName,
+      '--yes',
+    ], {
+      cwd: extContext.rootDir,
+      env: process.env,
+    })
+    child.stderr.setEncoding('utf8')
+    child.stderr.on('data', (chunk) => {
+      const data = isWindows ? chunk.toString() : chunk.toString().replaceAll('\n', '\r\n')
+      o.next(data)
+    })
+    child.stdout.setEncoding('utf8')
+    child.stdout.on('data', (chunk) => {
+      const data = isWindows ? chunk.toString() : chunk.toString().replaceAll('\n', '\r\n')
+      o.next(data)
+    })
+    child.on('error', (err) => o.next(`${err.name}: ${err.message}`))
+    child.on('close', (code) => {
+      if (code === 0)
+        o.complete()
+      else
+        o.error(code)
+    })
+    return () => child.kill()
+  })
+}
+
 export const makeMicromambaCreateEnvironmentTask = (
   extContext: ExtensionContext,
   environmentFileName: string,
@@ -19,33 +51,7 @@ export const makeMicromambaCreateEnvironmentTask = (
   const newLocal = new vscode.CustomExecution(async () => {
     const writeEmitter = new vscode.EventEmitter<string>();
     const closeEmitter = new vscode.EventEmitter<number>();
-    const process$ = new Observable<string>((o) => {
-      const child = spawn(extContext.micromambaPath, [
-        'create',
-        '--file',
-        environmentFileName,
-        '--yes',
-      ], {
-        cwd: workspaceFolder.uri.path,
-        env: process.env,
-      })
-      child.stderr.setEncoding('utf8')
-      child.stderr.on('data', (chunk) => {
-        const data = isWindows ? chunk.toString() : chunk.toString().replaceAll('\n', '\r\n')
-        o.next(data)
-      })
-      child.stdout.setEncoding('utf8')
-      child.stdout.on('data', (chunk) => {
-        const data = isWindows ? chunk.toString() : chunk.toString().replaceAll('\n', '\r\n')
-        o.next(data)
-      })
-      child.on('error', (err) => writeEmitter.fire(`${err.name}: ${err.message}`))
-      child.on('close', (code) => {
-        if (code === 0) o.complete()
-        else o.error(code)
-      })
-      return () => child.kill()
-    })
+    const process$ = makeProcess$(extContext, environmentFileName)
     let sub: Subscription
     const pty: vscode.Pseudoterminal = {
       onDidWrite: writeEmitter.event,
