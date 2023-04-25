@@ -83,7 +83,7 @@
     "rxjs": "^7.8.0",
     "tar": "6.1.13",
     "unbzip2-stream": "1.4.3",
-    "yaml": "^2.2.1"
+    "yaml": "^2.2.2"
   },
   "devDependencies": {
     "@types/follow-redirects": "^1.14.1",
