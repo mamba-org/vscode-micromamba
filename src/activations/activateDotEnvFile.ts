@@ -1,14 +1,9 @@
 import { Observable } from 'rxjs'
-import { createEnvFile, EnvironmentInfo } from '../environments'
-import { DisposableLike, ExtensionContext } from '../_definitions'
+import { EnvironmentInfo, createEnvFile } from '../micromamba'
 
-export function activateDotEnvFile(
-  extContext: ExtensionContext,
-  info$: Observable<EnvironmentInfo>,
-): DisposableLike {
-  const sub = info$.subscribe((info) => {
-    if (!info.ok) return
-    createEnvFile(info.vars, extContext, info.environmentName)
+export function activateDotEnvFile(info$: Observable<EnvironmentInfo>) {
+  const sub = info$.subscribe((x) => {
+    if (x.ok) createEnvFile(x.vars, x.info, x.environmentName)
   })
   return { dispose: () => sub.unsubscribe() }
 }

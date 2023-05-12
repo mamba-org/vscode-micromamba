@@ -1,22 +1,35 @@
-import * as path from 'path'
-import { pathKey } from '../helpers/infra'
+import { pathKey } from '../infra'
 import { Observable } from 'rxjs'
-import { DisposableLike, ExtensionContext } from '../_definitions'
-import { EnvironmentInfo } from '../environments'
+import { delimiter } from 'path'
+import { ExtensionContext, WorkspaceFolder } from 'vscode'
+import { readGlobalHomeDir } from '../micromamba/makeSignals'
+import { makeMicromambaInfo } from '../micromamba/makeMicromambaInfo'
+import { EnvironmentInfo } from '../micromamba'
 
-const originalPath = process.env[pathKey]
+const original = { path: process.env[pathKey] ?? ''}
 
-export function activateProcessEnv(
-  extContext: ExtensionContext,
-  info$: Observable<EnvironmentInfo>,
-): DisposableLike {
-  const sub = info$.subscribe((info) => {
-    if (info.ok) {
-      info.vars.forEach((x) => (process.env[x.name] = x.value))
+export function initProcessEnv(ctx: ExtensionContext, workspaceFolder: WorkspaceFolder) {
+  const globalHomeDir = readGlobalHomeDir(ctx)
+  const info = makeMicromambaInfo({ workspaceFolder, globalHomeDir })
+  const basePath = [info.mambaRootPrefix, original.path].join(delimiter)
+  process.env[pathKey] = basePath
+  process.env['MAMBA_ROOT_PREFIX'] = info.mambaRootPrefix
+  process.env['MAMBA_EXE'] = info.mambaExe
+  setTimeout(() => {
+    if (basePath === process.env[pathKey]) return
+    original.path = process.env[pathKey] ?? ''
+    process.env[pathKey] = [info.mambaRootPrefix, original.path].join(delimiter)
+  }, 0)
+}
+
+export function activateProcessEnv(info$: Observable<EnvironmentInfo>) {
+  const sub = info$.subscribe((x) => {
+    if (x.ok) {
+      x.vars.forEach((x) => (process.env[x.name] = x.value))
     } else {
-      process.env[pathKey] = `${extContext.micromambaDir}${path.delimiter}${originalPath}`
-      process.env['MAMBA_ROOT_PREFIX'] = extContext.micromambaDir
-      process.env['MAMBA_EXE'] = extContext.micromambaPath
+      process.env[pathKey] = `${x.info.mambaRootPrefix}${delimiter}${original.path}`
+      process.env['MAMBA_ROOT_PREFIX'] = x.info.mambaRootPrefix
+      process.env['MAMBA_EXE'] = x.info.mambaExe
     }
   })
   return { dispose: () => sub.unsubscribe() }

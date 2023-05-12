@@ -6,6 +6,10 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
+### 0.1.16
+
+* Global Home Directory mode added
+
 ### 0.1.15
 
 * Fix root dir resolution for WSL2

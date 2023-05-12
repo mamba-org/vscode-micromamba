@@ -1,30 +1,31 @@
-import * as vscode from 'vscode'
-import * as path from 'path'
 import rimraf from 'rimraf'
 import { CommandLike } from './_definitions'
-import sh from '../helpers/sh'
+import sh from '../sh'
+import { ProgressLocation, window } from 'vscode'
+import { join } from 'path'
+import { askToReloadWindow } from './helpers'
 
-export const runClearAllCommand: CommandLike = async ({ extContext, manager }) => {
-  manager.deactivate()
-  const { micromambaDir } = extContext
+export const runClearAllCommand: CommandLike = async ({ info, signals }) => {
+  signals.activeEnvironmentName.set(undefined)
+  const { mambaRootPrefix: micromambaDir } = info
   const tempDir = `${micromambaDir}_temp`
-  const targetDir = path.join(tempDir, `${Date.now()}`)
+  const targetDir = join(tempDir, `${Date.now()}`)
   try {
     await sh.mkdirp(targetDir)
   } catch (ignore) {
-    vscode.window.showErrorMessage(`Can't create directory: ${targetDir}`)
+    window.showErrorMessage(`Can't create directory: ${targetDir}`)
     return Promise.resolve()
   }
   try {
     if (await sh.testd(micromambaDir)) await sh.mv(micromambaDir, targetDir)
   } catch (ignore) {
-    vscode.window.showErrorMessage(`Can't move directory: ${micromambaDir}`)
+    window.showErrorMessage(`Can't move directory: ${micromambaDir}`)
     return Promise.resolve()
   }
-  return vscode.window.withProgress(
+  return window.withProgress(
     {
       title: 'Micromamba',
-      location: vscode.ProgressLocation.Notification,
+      location: ProgressLocation.Notification,
       cancellable: false,
     },
     async (progress) => {
@@ -32,8 +33,9 @@ export const runClearAllCommand: CommandLike = async ({ extContext, manager }) =
       try {
         await rimraf(tempDir)
       } catch (ignore) {
-        vscode.window.showErrorMessage(`Can't clear files in: ${tempDir}`)
+        window.showErrorMessage(`Can't clear files in: ${tempDir}`)
       }
+      askToReloadWindow()
     },
   ) as Promise<void>
 }

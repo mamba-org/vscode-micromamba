@@ -1,8 +1,3 @@
-import { ActiveEnvironmentManager, ExtensionContext } from '../_definitions'
+import { EnvironmentInfo } from "../micromamba";
 
-export type CommandLike = (context: CommandContext) => Promise<void>
-
-export interface CommandContext {
-  extContext: ExtensionContext
-  manager: ActiveEnvironmentManager
-}
+export type CommandLike = (info: EnvironmentInfo) => Promise<void>

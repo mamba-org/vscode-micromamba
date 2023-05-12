@@ -60,6 +60,21 @@
         "command": "corker.micromamba.clear.all",
         "title": "Micromamba: clear all",
         "enablement": "corker.micromamba.can.clear.all"
+      },
+      {
+        "command": "corker.micromamba.use.global.home.dir",
+        "title": "Micromamba: use global home directory",
+        "enablement": "corker.micromamba.can.use.global.home.dir"
+      },
+      {
+        "command": "corker.micromamba.use.local.home.dir",
+        "title": "Micromamba: use local home directory",
+        "enablement": "corker.micromamba.can.use.local.home.dir"
+      },
+      {
+        "command": "corker.micromamba.self.update",
+        "title": "Micromamba: self update",
+        "enablement": "corker.micromamba.can.self.update"
       }
     ]
   },
@@ -132,7 +147,9 @@
       "@typescript-eslint"
     ],
     "root": true,
-    "ignorePatterns": ["out"]
+    "ignorePatterns": [
+      "out"
+    ]
   },
   "prettier": {
     "printWidth": 100,

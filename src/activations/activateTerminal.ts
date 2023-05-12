@@ -1,26 +1,22 @@
-import * as vscode from 'vscode'
-import * as path from 'path'
-import { pathKey } from '../helpers/infra'
+import { pathKey } from '../infra'
 import { Observable } from 'rxjs'
-import { DisposableLike, ExtensionContext } from '../_definitions'
-import { EnvironmentInfo } from '../environments'
+import { DisposableLike } from '../_definitions'
+import { delimiter } from 'path'
+import { ExtensionContext } from 'vscode'
+import { EnvironmentInfo } from '../micromamba'
 
-export function activateTerminal(
-  context: vscode.ExtensionContext,
-  extContext: ExtensionContext,
-  info$: Observable<EnvironmentInfo>,
-): DisposableLike {
-  const { environmentVariableCollection: col } = context
-  const sub = info$.subscribe((info: EnvironmentInfo) => {
+export function activateTerminal(info$: Observable<EnvironmentInfo>, ctx: ExtensionContext): DisposableLike {
+  const { environmentVariableCollection: col } = ctx
+  const sub = info$.subscribe((x) => {
     col.clear()
     col.persistent = false
-    if (info.ok) {
-      info.vars.forEach((x) => col.replace(x.name, x.value))
+    if (x.ok) {
+      x.vars.forEach((v) => col.replace(v.name, v.value))
     } else {
-      const pathPrependValue = `${extContext.micromambaDir}${path.delimiter}`
+      const pathPrependValue = `${x.info.mambaRootPrefix}${delimiter}`
       col.prepend(pathKey, pathPrependValue)
-      col.replace('MAMBA_ROOT_PREFIX', extContext.micromambaDir)
-      col.replace('MAMBA_EXE', extContext.micromambaPath)
+      col.replace('MAMBA_ROOT_PREFIX', x.info.mambaRootPrefix)
+      col.replace('MAMBA_EXE', x.info.mambaExe)
     }
   })
   return { dispose: () => sub.unsubscribe() }

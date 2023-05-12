@@ -1,9 +1,8 @@
-import * as vscode from 'vscode'
-import { join } from 'path'
 import { readMicromambaEnvironmentFiles } from './pickMicromambaEnvironmentFile'
-import { ExtensionContext } from '../_definitions'
 import { MicromambaEnvironmentFile } from './_definitions'
-import sh from '../helpers/sh'
+import sh from '../sh'
+import { window } from 'vscode'
+import { MicromambaInfo } from './makeMicromambaInfo'
 
 export type MicromambaEnvironmentQuickPickItem = {
   label: string
@@ -25,32 +24,31 @@ const mapToQuickPickItems = (
 }
 
 export const findMicromambaEnvironmentQuickPickItems = async (
-  extContext: ExtensionContext,
+  info: MicromambaInfo,
 ): Promise<MicromambaEnvironmentQuickPickItem[]> => {
-  const names = await readMicromambaEnvironmentPrefixNames(extContext)
-  const files = await readMicromambaEnvironmentFiles(extContext)
+  const names = await readMicromambaEnvironmentPrefixNames(info)
+  const files = await readMicromambaEnvironmentFiles(info)
   return mapToQuickPickItems(files, names)
 }
 
 export const readMicromambaEnvironmentPrefixNames = async (
-  extContext: ExtensionContext,
+  info: MicromambaInfo,
 ): Promise<string[]> => {
-  const envsPath = join(extContext.micromambaDir, 'envs')
-  return (await sh.testd(envsPath)) ? await sh.ls(envsPath) : []
+  return (await sh.testd(info.envsDir)) ? await sh.ls(info.envsDir) : []
 }
 
 export const pickMicromambaEnvironmentPrefixName = async (
-  extContext: ExtensionContext,
+  info: MicromambaInfo,
   placeHolder: string,
 ): Promise<string | undefined> => {
-  const items = await findMicromambaEnvironmentQuickPickItems(extContext)
+  const items = await findMicromambaEnvironmentQuickPickItems(info)
   switch (items.length) {
     case 0:
       return undefined
     case 1:
       return items[0].data.content.name
     default: {
-      const item = await vscode.window.showQuickPick(items, { placeHolder })
+      const item = await window.showQuickPick(items, { placeHolder })
       return item ? item.data.content.name : undefined
     }
   }

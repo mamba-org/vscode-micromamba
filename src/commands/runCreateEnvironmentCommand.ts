@@ -1,69 +1,47 @@
-import * as vscode from 'vscode'
-import { join } from 'path'
-import { ExtensionContext } from '../_definitions'
 import { CommandLike } from './_definitions'
-import { ensureMicromamba, makeMicromambaCreateEnvironmentTask } from '../micromamba'
-import { MicromambaEnvironmentFile, pickMicromambaEnvironmentFile } from '../environments'
+import { createMicromambaEnvironment, ensureMicromamba, pickMicromambaEnvironmentFile } from '../micromamba'
 import { isNativeError } from 'util/types'
-import sh from '../helpers/sh'
+import { ProgressLocation, window } from 'vscode'
+import { askToReloadWindow } from './helpers'
+import { updateMicromamba } from '../micromamba/updateMicromamba'
+import { ensureMicromambaDir } from '../micromamba/ensureMicromambaDir'
 
-const _ensureMicromambaDir = async (extContext: ExtensionContext) => {
+export const runCreateEnvironmentCommand: CommandLike = async ({ info, signals, ch }) => {
   try {
-    await sh.mkdirp(extContext.micromambaDir)
-    const gitIgnorePath = join(extContext.micromambaDir, '.gitignore')
-    if (!(await sh.testf(gitIgnorePath))) await sh.writeFile(gitIgnorePath, '*')
-  } catch (ignore) {
-    throw new Error(`Can't create directory: ${extContext.micromambaDir}`)
-  }
-}
-
-const _ensureMicromamba = async (extContext: ExtensionContext): Promise<void> => {
-  try {
-    await vscode.window.withProgress(
+    signals.activeEnvironmentName.set(undefined)
+    const environmentFile = await pickMicromambaEnvironmentFile(info)
+    if (!environmentFile) return
+    ensureMicromambaDir(info)
+    await window.withProgress(
       {
         title: 'Micromamba',
-        location: vscode.ProgressLocation.Notification,
+        location: ProgressLocation.Notification,
         cancellable: false,
       },
       async (progress) => {
-        progress.report({ message: 'Downloading micromamba' })
-        await ensureMicromamba(extContext.micromambaDir)
-      },
-    )
-  } catch (ignore) {
-    throw new Error(`Can't download micromamba`)
-  }
-}
-
-const _createEnvironment = async (extContext: ExtensionContext, environmentFile: MicromambaEnvironmentFile): Promise<void> => {
-  try {
-    const workspaceFolder = vscode.workspace.workspaceFolders?.[0]
-    if (!workspaceFolder) return Promise.resolve()
-    const task = makeMicromambaCreateEnvironmentTask(extContext, environmentFile.fileName, workspaceFolder)
-    const value = await vscode.tasks.executeTask(task)
-    await new Promise<void>((resolve) => {
-      const dis = vscode.tasks.onDidEndTask((e) => {
-        if (e.execution != value) return
-        dis.dispose()
-        resolve()
+        progress.report({ message: 'Downloading' })
+        try {
+          await ensureMicromamba(info.mambaRootPrefix)
+        } catch (ignore) {
+          throw new Error(`Can't download micromamba`)
+        }
+        progress.report({ message: 'Updating'})
+        try {
+          await updateMicromamba(info, ch)
+        } catch (ignore) {
+          throw new Error(`Can't update micromamba`)
+        }
+        progress.report({ message: 'Creating environment'})
+        try {
+          await createMicromambaEnvironment(info, environmentFile, ch)
+        } catch (ignore) {
+          throw new Error(`Can't create environment`)
+        }
       })
-    })
-  } catch (ignore) {
-    throw new Error(`Can't initialize micromamba`)
-  }
-}
-
-export const runCreateEnvironmentCommand: CommandLike = async ({ extContext, manager }) => {
-  try {
-    manager.deactivate()
-    const environmentFile = await pickMicromambaEnvironmentFile(extContext)
-    if (!environmentFile) return
-    _ensureMicromambaDir(extContext)
-    await _ensureMicromamba(extContext)
-    await _createEnvironment(extContext, environmentFile)
-    manager.activate(environmentFile.content.name)
+    signals.activeEnvironmentName.set(environmentFile.content.name)
   } catch (error) {
     const message = isNativeError(error) ? error.message : `Can't create micromamba environment`
-    vscode.window.showErrorMessage(message)
+    window.showErrorMessage(message)
   }
+  askToReloadWindow()
 }

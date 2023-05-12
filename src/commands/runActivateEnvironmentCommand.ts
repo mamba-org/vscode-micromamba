@@ -1,11 +1,12 @@
-﻿import { pickMicromambaEnvironmentPrefixName } from '../environments'
+﻿import { pickMicromambaEnvironmentPrefixName } from '../micromamba'
 import { CommandLike } from './_definitions'
+import { askToReloadWindow } from './helpers'
 
-export const runActivateEnvironmentCommand: CommandLike = async ({ extContext, manager }) => {
-  const prefixName = await pickMicromambaEnvironmentPrefixName(
-    extContext,
-    'Select environment to activate',
-  )
-  if (!prefixName) return
-  manager.activate(prefixName)
+export const runActivateEnvironmentCommand: CommandLike = async ({ info, signals }) => {
+  const placeHolder = 'Select environment to activate'
+  const prefixName = await pickMicromambaEnvironmentPrefixName(info, placeHolder)
+  if (prefixName) {
+    signals.activeEnvironmentName.set(prefixName)
+    askToReloadWindow()
+  }
 }

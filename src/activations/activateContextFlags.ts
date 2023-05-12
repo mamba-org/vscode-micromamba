@@ -1,35 +1,35 @@
-import * as vscode from 'vscode'
-import { DisposableLike, ExtensionContext } from '../_definitions'
 import { Observable } from 'rxjs'
 import { concatMap } from 'rxjs/operators'
-import { EnvironmentInfo, findMicromambaEnvironmentQuickPickItems } from '../environments'
-import sh from '../helpers/sh'
+import sh from '../sh'
+import { commands } from 'vscode'
+import { EnvironmentInfo, findMicromambaEnvironmentQuickPickItems } from '../micromamba'
 
-const setContext = <T>(key: string, value: T): void => {
-  vscode.commands.executeCommand('setContext', key, value)
+function setContext<T>(key: string, value: T) {
+  commands.executeCommand('setContext', key, value)
 }
 
-export const activateContextFlags = (
-  extContext: ExtensionContext,
-  info$: Observable<EnvironmentInfo>,
-): DisposableLike => {
+export const activateContextFlags = (info$: Observable<EnvironmentInfo>) => {
   const sub = info$
     .pipe(
-      concatMap(async (info) => ({
+      concatMap(async ({ environmentName, info }) => ({
+        environmentName,
         info,
-        items: await findMicromambaEnvironmentQuickPickItems(extContext),
+        items: await findMicromambaEnvironmentQuickPickItems(info),
       })),
     )
-    .subscribe(async ({ info, items }) => {
-      const name = info.environmentName
-      const item = items.find((x) => x.data.content.name === name)
+    .subscribe(async ({ environmentName, info, items }) => {
+      const item = items.find((x) => x.data.content.name === environmentName)
       const hasCreatedEnvs = items.length > 0
       const hasActivatedEnv = !!item
-      const hasMicromambaDir = await sh.testd(extContext.micromambaDir)
+      const hasMambaRootPrefix = await sh.testd(info.mambaRootPrefix)
+      const hasMambaExe = await sh.testf(info.mambaExe)
       setContext('corker.micromamba.can.activate.environment', hasCreatedEnvs)
       setContext('corker.micromamba.can.deactivate.environment', hasActivatedEnv)
       setContext('corker.micromamba.can.remove.environment', hasActivatedEnv)
-      setContext('corker.micromamba.can.clear.all', hasMicromambaDir)
+      setContext('corker.micromamba.can.clear.all', hasMambaRootPrefix)
+      setContext('corker.micromamba.can.use.global.home.dir', info.isLocal)
+      setContext('corker.micromamba.can.use.local.home.dir', !info.isLocal)
+      setContext('corker.micromamba.can.self.update', hasMambaExe)
     })
   return { dispose: () => sub.unsubscribe() }
 }

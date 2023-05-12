@@ -1,37 +1,36 @@
-import * as vscode from 'vscode'
 import { join } from 'path'
 import rimraf from 'rimraf'
 import { CommandLike } from './_definitions'
-import { pickMicromambaEnvironmentPrefixName } from '../environments'
-import sh from '../helpers/sh'
+import sh from '../sh'
+import { ProgressLocation, window } from 'vscode'
+import { askToReloadWindow } from './helpers'
+import { pickMicromambaEnvironmentPrefixName } from '../micromamba'
 
-export const runRemoveEnvironmentCommand: CommandLike = async ({ extContext, manager }) => {
-  const prefixName = await pickMicromambaEnvironmentPrefixName(
-    extContext,
-    'Select environment to remove',
-  )
+export const runRemoveEnvironmentCommand: CommandLike = async ({ info, signals }) => {
+  const placeHolder = 'Select environment to remove'
+  const prefixName = await pickMicromambaEnvironmentPrefixName(info, placeHolder)
   if (!prefixName) return
-  manager.deactivate()
-  const { micromambaDir } = extContext
-  const tempDir = `${micromambaDir}_temp`
+  signals.activeEnvironmentName.set(undefined)
+  const { envsDir } = info
+  const tempDir = `${envsDir}_temp`
   const targetDir = join(tempDir, `${Date.now()}`)
-  const envDir = join(micromambaDir, 'envs', prefixName)
+  const envDir = join(envsDir, prefixName)
   try {
     await sh.mkdirp(targetDir)
   } catch (ignore) {
-    vscode.window.showErrorMessage(`Can't create directory: ${targetDir}`)
+    window.showErrorMessage(`Can't create directory: ${targetDir}`)
     return
   }
   try {
     if (await sh.testd(envDir)) await sh.mv(envDir, targetDir)
   } catch (ignore) {
-    vscode.window.showErrorMessage(`Can't move directory: ${envDir}`)
+    window.showErrorMessage(`Can't move directory: ${envDir}`)
     return
   }
-  return vscode.window.withProgress(
+  return window.withProgress(
     {
       title: 'Micromamba',
-      location: vscode.ProgressLocation.Notification,
+      location: ProgressLocation.Notification,
       cancellable: false,
     },
     async (progress) => {
@@ -39,8 +38,9 @@ export const runRemoveEnvironmentCommand: CommandLike = async ({ extContext, man
       try {
         await rimraf(tempDir)
       } catch (ignore) {
-        vscode.window.showErrorMessage(`Can't delete files in: ${tempDir}`)
+        window.showErrorMessage(`Can't delete files in: ${tempDir}`)
       }
+      askToReloadWindow()
     },
   ) as Promise<void>
 }

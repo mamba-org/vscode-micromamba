@@ -1,5 +1,5 @@
-import * as path from 'path'
-import sh from '../helpers/sh'
+import { join } from 'path'
+import sh from '../sh'
 import { downloadMicromamba } from './downloadMicromamba'
 
 export const _isMicromambaInstalled = (path: string) => {
@@ -7,15 +7,15 @@ export const _isMicromambaInstalled = (path: string) => {
 }
 
 export const isMicromambaInstalledWin = (cwd: string) => {
-  return _isMicromambaInstalled(path.join(cwd, 'micromamba.exe'))
+  return _isMicromambaInstalled(join(cwd, 'micromamba.exe'))
 }
 
 export const isMicromambaInstalledMac = (cwd: string) => {
-  return _isMicromambaInstalled(path.join(cwd, 'micromamba'))
+  return _isMicromambaInstalled(join(cwd, 'micromamba'))
 }
 
 export const isMicromambaInstalledLinux = (cwd: string) => {
-  return _isMicromambaInstalled(path.join(cwd, 'micromamba'))
+  return _isMicromambaInstalled(join(cwd, 'micromamba'))
 }
 
 export const isMicromambaInstalled = (cwd: string) => {

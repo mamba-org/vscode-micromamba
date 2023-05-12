@@ -1,37 +1,20 @@
 import { Observable } from 'rxjs'
-import { exhaustMap } from 'rxjs/operators'
-import * as vscode from 'vscode'
-import { CommandLike, commands } from '../commands'
-import { ActiveEnvironmentManager, DisposableLike, ExtensionContext } from '../_definitions'
-
-async function askToReloadWindow(): Promise<void> {
-  const action = 'Reload'
-  const result = await vscode.window.showInformationMessage(
-    'micromamba: Reload VSCode window to apply changes',
-    action,
-  )
-  if (result === action) vscode.commands.executeCommand('workbench.action.reloadWindow')
-}
+import { exhaustMap, withLatestFrom } from 'rxjs/operators'
+import { CommandLike, commands as _commands } from '../commands'
+import { Disposable, commands } from 'vscode'
+import { EnvironmentInfo } from '../micromamba'
 
 export const activateCommands = (
-  extContext: ExtensionContext,
-  manager: ActiveEnvironmentManager,
-): DisposableLike => {
-  const commands$ = new Observable<CommandLike>((subscriber) => {
-    const dis = vscode.Disposable.from(
-      ...commands.map(([key, command]) =>
-        vscode.commands.registerCommand(key, () => subscriber.next(command)),
-      ),
+  info$: Observable<EnvironmentInfo>
+) => {
+  const commands$ = new Observable<CommandLike>((s) => {
+    const dis = Disposable.from(
+      ..._commands.map(([key, command]) => commands.registerCommand(key, () => s.next(command))),
     )
     return () => dis.dispose()
   })
   const sub = commands$
-    .pipe(
-      exhaustMap(async (x: CommandLike) => {
-        await x({ extContext, manager })
-        askToReloadWindow().then()
-      }),
-    )
+    .pipe(withLatestFrom(info$), exhaustMap(([x, info]) => x(info)))
     .subscribe()
   return { dispose: () => sub.unsubscribe() }
 }

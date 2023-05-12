@@ -4,7 +4,7 @@ import { Writable } from 'stream'
 import * as tar from 'tar'
 import bz2 from 'unbzip2-stream'
 import { URL } from 'url'
-import sh from '../helpers/sh'
+import sh from '../sh'
 
 export const _downloadMicromamba = async (url: string, tar: Writable): Promise<void> => {
   try {

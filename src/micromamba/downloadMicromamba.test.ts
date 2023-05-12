@@ -1,5 +1,5 @@
 import * as path from 'path'
-import sh from '../helpers/sh'
+import sh from '../sh'
 import {
   downloadMicromambaLinux,
   downloadMicromambaMac,

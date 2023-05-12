@@ -1,12 +1,14 @@
-import * as vscode from 'vscode'
-import { ActiveEnvironmentManager, DisposableLike } from '../_definitions'
+import { Observable } from 'rxjs'
+import { Disposable, StatusBarAlignment, window } from 'vscode'
+import { EnvironmentInfo } from '../micromamba'
 
-export function activateStatusBarItem(manager: ActiveEnvironmentManager): DisposableLike {
-  const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left)
-  const sub = manager.prefix$.subscribe((name) => {
-    if (name) statusBarItem.text = `µenv[${name}]`
-    else statusBarItem.text = `µenv<none>`
+export function activateStatusBarItem(info$: Observable<EnvironmentInfo>) {
+  const statusBarItem = window.createStatusBarItem(StatusBarAlignment.Left)
+  const sub = info$.subscribe(({ info, environmentName }) => {
+    const suffix = info.isLocal ? '' : '(G)'
+    if (environmentName) statusBarItem.text = `µenv[${environmentName}]${suffix}`
+    else statusBarItem.text = `µenv<none>${suffix}`
     statusBarItem.show()
   })
-  return vscode.Disposable.from(statusBarItem, { dispose: () => sub.unsubscribe() })
+  return Disposable.from(statusBarItem, { dispose: () => sub.unsubscribe() })
 }
