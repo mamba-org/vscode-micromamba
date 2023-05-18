@@ -6,12 +6,13 @@ import { askToReloadWindow } from './helpers'
 import { updateMicromamba } from '../micromamba/updateMicromamba'
 import { ensureMicromambaDir } from '../micromamba/ensureMicromambaDir'
 
-export const runCreateEnvironmentCommand: CommandLike = async ({ info, signals, ch }) => {
+export const runCreateEnvironmentCommand: CommandLike = async ({ params, signals, ch }) => {
   try {
-    signals.activeEnvironmentName.set(undefined)
-    const environmentFile = await pickMicromambaEnvironmentFile(info)
+    signals.activeEnvironmentInput.set(undefined)
+    const { micromambaParams } = params
+    const environmentFile = await pickMicromambaEnvironmentFile(micromambaParams)
     if (!environmentFile) return
-    ensureMicromambaDir(info)
+    ensureMicromambaDir(micromambaParams)
     await window.withProgress(
       {
         title: 'Micromamba',
@@ -21,24 +22,24 @@ export const runCreateEnvironmentCommand: CommandLike = async ({ info, signals, 
       async (progress) => {
         progress.report({ message: 'Downloading' })
         try {
-          await ensureMicromamba(info.mambaRootPrefix)
+          await ensureMicromamba(micromambaParams.mambaRootPrefix)
         } catch (ignore) {
           throw new Error(`Can't download micromamba`)
         }
         progress.report({ message: 'Updating'})
         try {
-          await updateMicromamba(info, ch)
+          await updateMicromamba(micromambaParams, ch)
         } catch (ignore) {
           throw new Error(`Can't update micromamba`)
         }
         progress.report({ message: 'Creating environment'})
         try {
-          await createMicromambaEnvironment(info, environmentFile, ch)
+          await createMicromambaEnvironment(micromambaParams, environmentFile, ch)
         } catch (ignore) {
           throw new Error(`Can't create environment`)
         }
       })
-    signals.activeEnvironmentName.set(environmentFile.content.name)
+    signals.activeEnvironmentInput.set({ name: environmentFile.content.name, path: undefined })
   } catch (error) {
     const message = isNativeError(error) ? error.message : `Can't create micromamba environment`
     window.showErrorMessage(message)

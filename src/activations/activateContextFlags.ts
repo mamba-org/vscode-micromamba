@@ -11,10 +11,10 @@ function setContext<T>(key: string, value: T) {
 export const activateContextFlags = (info$: Observable<EnvironmentInfo>) => {
   const sub = info$
     .pipe(
-      concatMap(async ({ environmentName, info }) => ({
-        environmentName,
-        info,
-        items: await findMicromambaEnvironmentQuickPickItems(info),
+      concatMap(async ({ params }) => ({
+        environmentName: params.environmentParams?.name,
+        info: params.micromambaParams,
+        items: await findMicromambaEnvironmentQuickPickItems(params.micromambaParams),
       })),
     )
     .subscribe(async ({ environmentName, info, items }) => {

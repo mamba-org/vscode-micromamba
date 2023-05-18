@@ -5,7 +5,7 @@ import * as YAML from 'yaml'
 import { MicromambaEnvironmentFile, MicromambaEnvironmentFileContent } from './_definitions'
 import sh from '../sh'
 import { window } from 'vscode'
-import { MicromambaInfo } from './makeMicromambaInfo'
+import { MicromambaParams } from './makeMicromambaParams'
 
 const nodejs = `# Micromamba environment file
 # https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba
@@ -105,7 +105,7 @@ const templates: { [key: string]: string } = isWindows
 const defaultFileName = 'environment.yml'
 
 export const readMicromambaEnvironmentFile = async (
-  extContext: MicromambaInfo,
+  extContext: MicromambaParams,
   fileName: string,
 ): Promise<MicromambaEnvironmentFile | undefined> => {
   const filePath = join(extContext.workspaceDir, fileName)
@@ -119,7 +119,7 @@ export const readMicromambaEnvironmentFile = async (
 }
 
 export const readMicromambaEnvironmentFiles = async (
-  extContext: MicromambaInfo,
+  extContext: MicromambaParams,
 ): Promise<MicromambaEnvironmentFile[]> => {
   const fileNames = (await sh.ls(extContext.workspaceDir))
     .filter((x) => x === defaultFileName || x.toLowerCase().startsWith('environment'))
@@ -130,7 +130,7 @@ export const readMicromambaEnvironmentFiles = async (
 }
 
 export const pickMicromambaEnvironmentFile = async (
-  info: MicromambaInfo,
+  info: MicromambaParams,
 ): Promise<MicromambaEnvironmentFile | undefined> => {
   const files = await readMicromambaEnvironmentFiles(info)
   switch (files.length) {

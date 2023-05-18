@@ -2,7 +2,7 @@ import { readMicromambaEnvironmentFiles } from './pickMicromambaEnvironmentFile'
 import { MicromambaEnvironmentFile } from './_definitions'
 import sh from '../sh'
 import { window } from 'vscode'
-import { MicromambaInfo } from './makeMicromambaInfo'
+import { MicromambaParams } from './makeMicromambaParams'
 
 export type MicromambaEnvironmentQuickPickItem = {
   label: string
@@ -24,7 +24,7 @@ const mapToQuickPickItems = (
 }
 
 export const findMicromambaEnvironmentQuickPickItems = async (
-  info: MicromambaInfo,
+  info: MicromambaParams,
 ): Promise<MicromambaEnvironmentQuickPickItem[]> => {
   const names = await readMicromambaEnvironmentPrefixNames(info)
   const files = await readMicromambaEnvironmentFiles(info)
@@ -32,13 +32,13 @@ export const findMicromambaEnvironmentQuickPickItems = async (
 }
 
 export const readMicromambaEnvironmentPrefixNames = async (
-  info: MicromambaInfo,
+  info: MicromambaParams,
 ): Promise<string[]> => {
   return (await sh.testd(info.envsDir)) ? await sh.ls(info.envsDir) : []
 }
 
 export const pickMicromambaEnvironmentPrefixName = async (
-  info: MicromambaInfo,
+  info: MicromambaParams,
   placeHolder: string,
 ): Promise<string | undefined> => {
   const items = await findMicromambaEnvironmentQuickPickItems(info)

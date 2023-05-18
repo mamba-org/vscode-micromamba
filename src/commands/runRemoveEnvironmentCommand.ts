@@ -6,12 +6,13 @@ import { ProgressLocation, window } from 'vscode'
 import { askToReloadWindow } from './helpers'
 import { pickMicromambaEnvironmentPrefixName } from '../micromamba'
 
-export const runRemoveEnvironmentCommand: CommandLike = async ({ info, signals }) => {
+export const runRemoveEnvironmentCommand: CommandLike = async ({ params, signals }) => {
+  const { micromambaParams } = params
   const placeHolder = 'Select environment to remove'
-  const prefixName = await pickMicromambaEnvironmentPrefixName(info, placeHolder)
+  const prefixName = await pickMicromambaEnvironmentPrefixName(micromambaParams, placeHolder)
   if (!prefixName) return
-  signals.activeEnvironmentName.set(undefined)
-  const { envsDir } = info
+  signals.activeEnvironmentInput.set(undefined)
+  const { envsDir } = micromambaParams
   const tempDir = `${envsDir}_temp`
   const targetDir = join(tempDir, `${Date.now()}`)
   const envDir = join(envsDir, prefixName)

@@ -1,38 +1,40 @@
 import { ExtensionContext, OutputChannel, WorkspaceFolder, window } from "vscode";
-import { Signals, makeSignals } from "./makeSignals";
+import { EnvironmentParams, Signals, makeSignals } from "./makeSignals";
 import { combineLatest, concatMap, shareReplay } from "rxjs";
-import { makeMicromambaInfo } from "./makeMicromambaInfo";
+import { makeMicromambaParams } from "./makeMicromambaParams";
 import { getMicromambaEnvVariables } from "./getMicromambaEnvVariables";
 import { EnvironmentFailed, EnvironmentOK } from "./_definitions";
 
 interface Props {
   ch: OutputChannel
   signals: Signals
-  environmentName: string | undefined
+  environmentParams: EnvironmentParams
   workspaceFolder: WorkspaceFolder
   globalHomeDir: string | undefined
 }
 
-export async function _makeEnvironmentInfo({ workspaceFolder, globalHomeDir, environmentName, signals, ch }: Props) {
-  const info = makeMicromambaInfo({ workspaceFolder, globalHomeDir })
+export async function _makeEnvironmentInfo({ workspaceFolder, globalHomeDir, environmentParams, signals, ch }: Props) {
+  const micromambaParams = makeMicromambaParams({ workspaceFolder, globalHomeDir })
   const common = {
     ch,
     signals,
-    info,
-    environmentName,
+    params: {
+      micromambaParams,
+      environmentParams,
+    }
   }
-  if (!environmentName) return {
+  if (environmentParams === undefined) return {
     ...common,
     ok: false,
   } as EnvironmentFailed
   try {
     return {
       ...common,
-      vars: await getMicromambaEnvVariables(info, environmentName),
+      vars: await getMicromambaEnvVariables({ micromambaParams, environmentParams }),
       ok: true,
     } as EnvironmentOK
   } catch (ignore) {
-    window.showErrorMessage(`Micromamba can't create ${environmentName} environment`)
+    window.showErrorMessage(`Micromamba can't create ${environmentParams.name} environment`)
     return {
       ...common,
       ok: false,
@@ -43,12 +45,12 @@ export async function _makeEnvironmentInfo({ workspaceFolder, globalHomeDir, env
 export function makeEnvironmentInfo(ctx: ExtensionContext, workspaceFolder: WorkspaceFolder) {
   const ch = window.createOutputChannel('Micromamba')
   const signals = makeSignals(ctx)
-  return combineLatest([signals.globalHomeDir.values$, signals.activeEnvironmentName.values$]).pipe(
+  return combineLatest([signals.globalHomeDir.values$, signals.activeEnvironmentInput.values$]).pipe(
     concatMap(async ([globalHomeDir, environmentName]) => _makeEnvironmentInfo({
       ch,
       workspaceFolder,
       globalHomeDir,
-      environmentName,
+      environmentParams: environmentName,
       signals,
     })),
     shareReplay(1)

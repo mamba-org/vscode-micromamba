@@ -1,9 +1,9 @@
 import { join } from 'path';
 import sh from '../sh';
-import { MicromambaInfo } from './makeMicromambaInfo';
+import { MicromambaParams } from './makeMicromambaParams';
 
 
-export async function ensureMicromambaDir(info: MicromambaInfo) {
+export async function ensureMicromambaDir(info: MicromambaParams) {
   try {
     await sh.mkdirp(info.mambaRootPrefix);
   } catch (ignore) {

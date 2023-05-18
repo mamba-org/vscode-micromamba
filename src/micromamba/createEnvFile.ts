@@ -1,14 +1,14 @@
 import * as fs from 'fs'
 import { join } from 'path'
 import { EnvironmentVariables } from '../micromamba'
-import { MicromambaInfo } from './makeMicromambaInfo'
+import { MicromambaParams } from './makeMicromambaParams'
 
 export const escapeValue = (value: string): string =>
   value.replace(/\n/g, '\\n').replace(/"/g, '""')
 
 export const createEnvFile = (
   vars: EnvironmentVariables,
-  info: MicromambaInfo,
+  info: MicromambaParams,
   prefixName: string,
 ): void => {
   const envFilePath = join(info.workspaceMicromambaDir, `.env.${prefixName}`)

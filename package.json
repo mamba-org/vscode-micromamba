@@ -75,6 +75,10 @@
         "command": "corker.micromamba.self.update",
         "title": "Micromamba: self update",
         "enablement": "corker.micromamba.can.self.update"
+      },
+      {
+        "command": "corker.micromamba.activate.environment.by.path",
+        "title": "Micromamba: activate environment by path"
       }
     ]
   },

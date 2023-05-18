@@ -7,16 +7,17 @@ import { EnvironmentInfo } from '../micromamba'
 
 export function activateTerminal(info$: Observable<EnvironmentInfo>, ctx: ExtensionContext): DisposableLike {
   const { environmentVariableCollection: col } = ctx
-  const sub = info$.subscribe((x) => {
+  const sub = info$.subscribe((info) => {
     col.clear()
     col.persistent = false
-    if (x.ok) {
-      x.vars.forEach((v) => col.replace(v.name, v.value))
+    if (info.ok) {
+      info.vars.forEach((v) => col.replace(v.name, v.value))
     } else {
-      const pathPrependValue = `${x.info.mambaRootPrefix}${delimiter}`
+      const { mambaRootPrefix, mambaExe } = info.params.micromambaParams
+      const pathPrependValue = `${mambaRootPrefix}${delimiter}`
       col.prepend(pathKey, pathPrependValue)
-      col.replace('MAMBA_ROOT_PREFIX', x.info.mambaRootPrefix)
-      col.replace('MAMBA_EXE', x.info.mambaExe)
+      col.replace('MAMBA_ROOT_PREFIX', mambaRootPrefix)
+      col.replace('MAMBA_EXE', mambaExe)
     }
   })
   return { dispose: () => sub.unsubscribe() }

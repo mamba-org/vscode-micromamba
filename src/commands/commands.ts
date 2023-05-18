@@ -7,6 +7,7 @@ import { runRemoveEnvironmentCommand } from './runRemoveEnvironmentCommand'
 import { runSelfUpdateCommand } from './runSelfUpdateCommand'
 import { runUseGlobalHomeDirCommand } from './runUseGlobalHomeDirCommand'
 import { runUseLocalHomeDirCommand } from './runUseLocalHomeDirCommand'
+import { runActivateEnvironmentByPathCommand } from './runActivateEnvironmentByPathCommand'
 
 export const commands: Array<[string, CommandLike]> = [
   ['corker.micromamba.create.environment', runCreateEnvironmentCommand],
@@ -17,4 +18,5 @@ export const commands: Array<[string, CommandLike]> = [
   ['corker.micromamba.use.global.home.dir', runUseGlobalHomeDirCommand],
   ['corker.micromamba.use.local.home.dir', runUseLocalHomeDirCommand],
   ['corker.micromamba.self.update', runSelfUpdateCommand],
+  ['corker.micromamba.activate.environment.by.path', runActivateEnvironmentByPathCommand]
 ]

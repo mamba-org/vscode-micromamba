@@ -11,7 +11,7 @@ interface Params {
   globalHomeDir: string | undefined
 }
 
-export function makeMicromambaInfo({ workspaceFolder, globalHomeDir }: Params) {
+export function makeMicromambaParams({ workspaceFolder, globalHomeDir }: Params) {
   const workspaceDir = workspaceFolder.uri.fsPath
   const workspaceMicromambaDir = join(workspaceDir, dirName)
   if (globalHomeDir === undefined) {
@@ -28,4 +28,4 @@ export function makeMicromambaInfo({ workspaceFolder, globalHomeDir }: Params) {
   }
 }
 
-export type MicromambaInfo = ReturnType<typeof makeMicromambaInfo>
+export type MicromambaParams = ReturnType<typeof makeMicromambaParams>

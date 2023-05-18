@@ -5,10 +5,10 @@ import { ProgressLocation, window } from 'vscode'
 import { join } from 'path'
 import { askToReloadWindow } from './helpers'
 
-export const runClearAllCommand: CommandLike = async ({ info, signals }) => {
-  signals.activeEnvironmentName.set(undefined)
-  const { mambaRootPrefix: micromambaDir } = info
-  const tempDir = `${micromambaDir}_temp`
+export const runClearAllCommand: CommandLike = async ({ params, signals }) => {
+  signals.activeEnvironmentInput.set(undefined)
+  const { mambaRootPrefix } = params.micromambaParams
+  const tempDir = `${mambaRootPrefix}_temp`
   const targetDir = join(tempDir, `${Date.now()}`)
   try {
     await sh.mkdirp(targetDir)
@@ -17,9 +17,9 @@ export const runClearAllCommand: CommandLike = async ({ info, signals }) => {
     return Promise.resolve()
   }
   try {
-    if (await sh.testd(micromambaDir)) await sh.mv(micromambaDir, targetDir)
+    if (await sh.testd(mambaRootPrefix)) await sh.mv(mambaRootPrefix, targetDir)
   } catch (ignore) {
-    window.showErrorMessage(`Can't move directory: ${micromambaDir}`)
+    window.showErrorMessage(`Can't move directory: ${mambaRootPrefix}`)
     return Promise.resolve()
   }
   return window.withProgress(

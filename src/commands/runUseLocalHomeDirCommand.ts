@@ -2,7 +2,7 @@
 import { askToReloadWindow } from './helpers'
 
 export const runUseLocalHomeDirCommand: CommandLike = async ({ signals }) => {
-  signals.activeEnvironmentName.set(undefined)
+  signals.activeEnvironmentInput.set(undefined)
   signals.globalHomeDir.set(undefined)
   askToReloadWindow()
 }

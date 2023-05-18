@@ -34,9 +34,9 @@ it('with global home dir', async () => {
   globalStateGetMock.mockImplementation(() => homeDir)
   const info$ = makeEnvironmentInfo(ctx, workspaceFolder)
   const info = await firstValueFrom(info$)
-  expect(info.environmentName).toMatchInlineSnapshot(`"default"`)
+  expect(info.params.environmentParams?.name).toMatchInlineSnapshot(`"default"`)
   if (isWindows) {
-    expect(info.info).toMatchInlineSnapshot(`
+    expect(info.params.micromambaParams).toMatchInlineSnapshot(`
       {
         "envsDir": "c:\\basedir\\home\\envs\\88933f0e",
         "isLocal": false,
@@ -47,7 +47,7 @@ it('with global home dir', async () => {
       }
     `)
   } else {
-    expect(info.info).toMatchInlineSnapshot(`
+    expect(info.params.micromambaParams).toMatchInlineSnapshot(`
       {
         "envsDir": "/basedir/home/envs/8e100a88",
         "isLocal": false,
@@ -65,9 +65,9 @@ it('with local home dir', async () => {
   globalStateGetMock.mockImplementation(() => undefined)
   const info$ = makeEnvironmentInfo(ctx, workspaceFolder)
   const info = await firstValueFrom(info$)
-  expect(info.environmentName).toMatchInlineSnapshot(`"default"`)
+  expect(info.params.environmentParams?.name).toMatchInlineSnapshot(`"default"`)
   if (isWindows) {
-    expect(info.info).toMatchInlineSnapshot(`
+    expect(info.params.micromambaParams).toMatchInlineSnapshot(`
       {
         "envsDir": "c:\\basedir\\workspace\\.micromamba\\envs",
         "isLocal": true,
@@ -78,7 +78,7 @@ it('with local home dir', async () => {
       }
     `)
   } else {
-    expect(info.info).toMatchInlineSnapshot(`
+    expect(info.params.micromambaParams).toMatchInlineSnapshot(`
       {
         "envsDir": "/basedir/workspace/.micromamba/envs",
         "isLocal": true,

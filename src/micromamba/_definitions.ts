@@ -1,6 +1,6 @@
 import { OutputChannel } from 'vscode'
-import { Signals } from './makeSignals'
-import { MicromambaInfo } from './makeMicromambaInfo'
+import { EnvironmentParams, Signals } from './makeSignals'
+import { MicromambaParams } from './makeMicromambaParams'
 
 export interface EnvironmentVariable {
   readonly name: string
@@ -21,13 +21,13 @@ export type MicromambaEnvironmentFile = {
   readonly content: MicromambaEnvironmentFileContent
 }
 
-export type EnvironmentName = string
-
 export interface EnvironmentOK {
   readonly ch: OutputChannel
   readonly signals: Signals
-  readonly info: MicromambaInfo
-  readonly environmentName: EnvironmentName
+  readonly params: {
+    readonly micromambaParams: MicromambaParams
+    readonly environmentParams: EnvironmentParams
+  }
   readonly vars: EnvironmentVariables
   readonly ok: true
 }
@@ -35,8 +35,10 @@ export interface EnvironmentOK {
 export interface EnvironmentFailed {
   readonly ch: OutputChannel
   readonly signals: Signals
-  readonly info: MicromambaInfo
-  readonly environmentName?: EnvironmentName
+  readonly params: {
+    readonly micromambaParams: MicromambaParams
+    readonly environmentParams: EnvironmentParams
+  }
   readonly ok: false
 }
 

@@ -17,14 +17,14 @@ export const runUseGlobalHomeDirCommand: CommandLike = async ({ signals, ch }) =
     if (!uris) return
     const homeDir = join(uris[0].fsPath, '.micromamba')
     await sh.mkdirp(homeDir)
-    signals.activeEnvironmentName.set(undefined)
+    signals.activeEnvironmentInput.set(undefined)
     signals.globalHomeDir.set(homeDir)
     ch.appendLine(`Global home directory: ${homeDir}`)
     askToReloadWindow()
   } else {
     const homeDir = join(os.homedir(), '.vscode-micromamba')
     await sh.mkdirp(homeDir)
-    signals.activeEnvironmentName.set(undefined)
+    signals.activeEnvironmentInput.set(undefined)
     signals.globalHomeDir.set(homeDir)
     ch.appendLine(`Global home directory: ${homeDir}`)
     askToReloadWindow()

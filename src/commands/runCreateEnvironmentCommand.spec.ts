@@ -2,7 +2,7 @@ import { basename, join } from 'path'
 import { EnvironmentInfo, getMicromambaEnvVariables } from '../micromamba'
 import { runCreateEnvironmentCommand } from './runCreateEnvironmentCommand'
 import sh from '../sh'
-import { makeMicromambaInfo } from '../micromamba/makeMicromambaInfo'
+import { makeMicromambaParams } from '../micromamba/makeMicromambaParams'
 import { WorkspaceFolder } from 'vscode'
 import { isWindows } from '../infra'
 import { execSync } from 'child_process'
@@ -47,12 +47,12 @@ dependencies:
 it('with global home dir', async () => {
   const ch = {}
   const signals = {
-    activeEnvironmentName: { set: jest.fn() },
+    activeEnvironmentInput: { set: jest.fn() },
   }
-  const info = makeMicromambaInfo({ workspaceFolder, globalHomeDir })
+  const micromambaParams = makeMicromambaParams({ workspaceFolder, globalHomeDir })
   await runCreateEnvironmentCommand({
     ch,
-    info,
+    params: { micromambaParams },
     signals,
   } as unknown as EnvironmentInfo)
   expect(await sh.ls(globalHomeDir)).toStrictEqual([
@@ -61,9 +61,9 @@ it('with global home dir', async () => {
     'pkgs',
   ])
   expect({
-    envsDir: await sh.ls(info.envsDir),
-    workspaceDir: await sh.ls(info.workspaceDir),
-    workspaceMicromambaDir: await sh.ls(info.workspaceMicromambaDir),
+    envsDir: await sh.ls(micromambaParams.envsDir),
+    workspaceDir: await sh.ls(micromambaParams.workspaceDir),
+    workspaceMicromambaDir: await sh.ls(micromambaParams.workspaceMicromambaDir),
   }).toMatchInlineSnapshot(`
     {
       "envsDir": [
@@ -78,7 +78,8 @@ it('with global home dir', async () => {
       ],
     }
   `)
-  const vars = await getMicromambaEnvVariables(info, 'mamba')
+  const environmentParams = { name: 'mamba', path: undefined }
+  const vars = await getMicromambaEnvVariables({ micromambaParams, environmentParams })
   const env = Object.fromEntries(vars.map((x) => [x.name, x.value]))
   expect(() => execSync('node --version', { env, encoding: 'utf8' })).not.toThrow()
 }, 100000)
@@ -86,24 +87,24 @@ it('with global home dir', async () => {
 it('with local home dir', async () => {
   const ch = {}
   const signals = {
-    activeEnvironmentName: { set: jest.fn() },
+    activeEnvironmentInput: { set: jest.fn() },
   }
-  const info = makeMicromambaInfo({ workspaceFolder, globalHomeDir: undefined })
+  const micromambaParams = makeMicromambaParams({ workspaceFolder, globalHomeDir: undefined })
   await runCreateEnvironmentCommand({
     ch,
-    info,
+    params: { micromambaParams },
     signals,
   } as unknown as EnvironmentInfo)
-  expect(await sh.ls(info.workspaceMicromambaDir)).toStrictEqual([
+  expect(await sh.ls(micromambaParams.workspaceMicromambaDir)).toStrictEqual([
     '.gitignore',
     'envs',
     isWindows ? 'micromamba.exe' : 'micromamba',
     'pkgs',
   ])
   expect({
-    envsDir: await sh.ls(info.envsDir),
+    envsDir: await sh.ls(micromambaParams.envsDir),
     globalHomeDir: await sh.ls(globalHomeDir),
-    workspaceDir: await sh.ls(info.workspaceDir),
+    workspaceDir: await sh.ls(micromambaParams.workspaceDir),
   }).toMatchInlineSnapshot(`
     {
       "envsDir": [
@@ -116,7 +117,8 @@ it('with local home dir', async () => {
       ],
     }
   `)
-  const vars = await getMicromambaEnvVariables(info, 'mamba')
+  const environmentParams = { name: 'mamba', path: undefined }
+  const vars = await getMicromambaEnvVariables({ micromambaParams, environmentParams })
   const env = Object.fromEntries(vars.map((x) => [x.name, x.value]))
   expect(() => execSync('node --version', { env, encoding: 'utf8' })).not.toThrow()
 }, 100000)

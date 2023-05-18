@@ -66,6 +66,13 @@ Clear all command removes micromamba, packages, and reset environment to the ini
 1. Open command palette (Ctrl+Shift+P)
 2. Type - micromamba clear all
 
+### Micromamba: activate environment by path
+
+Activate an environment created outside of vscode-micromamba extension
+
+1. Open command palette (Ctrl+Shift+P)
+2. type - micromamba activate by path
+
 ### Micromamba: use global home directory
 
 Store micromamba files and environments for all projects in one global directory.
@@ -80,7 +87,7 @@ Store micromamba files and environments in .micromamba directory inside the proj
 1. Open command palette (Ctrl+Shift+P)
 2. Type - use local home directory
 
->> This is a default behavior
+> This is a default behavior
 
 ### Micromamba: self update
 
@@ -89,7 +96,7 @@ Update micromamba to the latest version.
 1. Open command palette (Ctrl+Shift+P)
 2. Type - self update
 
->> Micromamba updates each time before creating a new environment
+> Micromamba updates each time before creating a new environment
 
 ## Global home directory
 
