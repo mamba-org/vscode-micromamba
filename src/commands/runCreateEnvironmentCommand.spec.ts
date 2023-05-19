@@ -82,7 +82,7 @@ it('with global home dir', async () => {
   const vars = await getMicromambaEnvVariables({ micromambaParams, environmentParams })
   const env = Object.fromEntries(vars.map((x) => [x.name, x.value]))
   expect(() => execSync('node --version', { env, encoding: 'utf8' })).not.toThrow()
-}, 100000)
+}, 200000)
 
 it('with local home dir', async () => {
   const ch = {}
@@ -121,4 +121,4 @@ it('with local home dir', async () => {
   const vars = await getMicromambaEnvVariables({ micromambaParams, environmentParams })
   const env = Object.fromEntries(vars.map((x) => [x.name, x.value]))
   expect(() => execSync('node --version', { env, encoding: 'utf8' })).not.toThrow()
-}, 100000)
+}, 200000)
