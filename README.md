@@ -21,87 +21,86 @@ Content
 
 ## The Aim
 
-Provide a convenient way to install developer tools in VSCode workspaces from [conda-forge](https://conda-forge.org) with [micromamba](https://mamba.readthedocs.io). Get NodeJS, Go, Rust, Python or JupyterLab installed by running a single command.
+Provide a convenient way to install developer tools in VSCode workspaces from [conda-forge](https://conda-forge.org) with [micromamba](https://mamba.readthedocs.io). Get NodeJS, Go, Rust, Python, or JupyterLab installed by running a single command.
 
 Inspired by [Robocorp](https://robocorp.com) RPA developer tools:
 
 - [RCC](https://robocorp.com/docs/rcc/overview) - a command-line tool to run software robots and integrate with the Robocorp Cloud
-- [Robocorp Lab](https://robocorp.com/docs/developer-tools/robocorp-lab/overview) - a JupyterLab based IDE to build software robots
 - [Robocorp Code](https://robocorp.com/docs/developer-tools/visual-studio-code/overview) - a VSCode extension to build software robots
 
 ## Commands
 
-### Micromamba: create environment
+### Micromamba: create an environment
 
 This command creates a file - environment.yml describing configuration.
 The environment.yml is a [mamba environment file](https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html#yaml-spec-files)
-The extension comes with a number of templates but you could change it to your needs and re-run init command.
+The extension comes with a number of templates, but you could change it to your needs and re-run the init command.
 
-1. Open command palette (Ctrl+Shift+P)
+1. Open the command palette (Ctrl+Shift+P)
 2. Type - micromamba create environment
 3. Choose a template from a list
 4. The environment is activated automatically
 
-### Micromamba: deactivate environment
+### Micromamba: deactivate the environment
 
-1. Open command palette (Ctrl+Shift+P)
+1. Open the command palette (Ctrl+Shift+P)
 2. Type - micromamba deactivate environment
 
 ### Micromamba: activate environment
 
-1. Open command palette (Ctrl+Shift+P)
+1. Open the command palette (Ctrl+Shift+P)
 2. Type - micromamba activate environment
 3. Choose an environment from a list of created environments
 
-### Micromamba: remove environment
+### Micromamba: remove the environment
 
-1. Open command palette (Ctrl+Shift+P)
+1. Open the command palette (Ctrl+Shift+P)
 2. Type - micromamba remove environment
 3. Choose an environment from a list of created environments
 
 ### Micromamba: clear all
 
-Clear all command removes micromamba, packages, and reset environment to the initial state.
+Clear all command, removes micromamba and packages, and reset the environment to the initial state.
 
-1. Open command palette (Ctrl+Shift+P)
+1. Open the command palette (Ctrl+Shift+P)
 2. Type - micromamba clear all
 
 ### Micromamba: activate environment by path
 
-Activate an environment created outside of vscode-micromamba extension
+Activate an environment created outside of the _vscode-micromamba_ extension.
 
-1. Open command palette (Ctrl+Shift+P)
+1. Open the command palette (Ctrl+Shift+P)
 2. type - micromamba activate by path
 
-### Micromamba: use global home directory
+### Micromamba: use the global home directory
 
 Store micromamba files and environments for all projects in one global directory.
 
-1. Open command palette (Ctrl+Shift+P)
-2. Type - use global home directory
+1. Open the command palette (Ctrl+Shift+P)
+2. Type - micromamba use global home directory
 
-### Micromamba: use local home directory
+### Micromamba: use the local home directory
 
-Store micromamba files and environments in .micromamba directory inside the project.
+Store micromamba files and environments in the .micromamba directory inside the project.
 
-1. Open command palette (Ctrl+Shift+P)
-2. Type - use local home directory
+1. Open the command palette (Ctrl+Shift+P)
+2. Type - micromamba use local home directory
 
 > This is a default behavior
 
-### Micromamba: self update
+### Micromamba: self-update
 
 Update micromamba to the latest version.
 
-1. Open command palette (Ctrl+Shift+P)
-2. Type - self update
+1. Open the command palette (Ctrl+Shift+P)
+2. Type - micromamba self update
 
 > Micromamba updates each time before creating a new environment
 
 ## Global home directory
 
-By default extension work in a local mode, when all additional files are created in the `<workspaceRoot>/.micromamba` directory.
-It's also possible to switch to global home directory mode, when files for all projects are stored in one place.
+The extension works locally by default when all additional files are created in the `<workspaceRoot>/.micromamba` directory.
+Switching to global home directory mode is also possible when files for all projects are stored in one place.
 
 ### Local mode
 
@@ -111,24 +110,24 @@ It's also possible to switch to global home directory mode, when files for all p
 
 ### Global mode
 
-1. Use less disk space and could be faster to create environments because packages cached globally
-2. Micromamba files inside the project directory could conflict with other tools. E.g. `yarn` doesn't like local mode in combination with `module` node package type.
+1. Use less disk space and could be faster to create environments because packages are cached globally
+2. Micromamba files inside the project directory could conflict with other tools. E.g., `yarn` doesn't like local mode in combination with the `module` node package type.
 
 ### Location of the global home directory
 
-On Linux and Mac the global home directory is always `$HOME/.vscode-micromamba`
+On Linux and Mac, the global home directory is always `$HOME/.vscode-micromamba`
 
-On Windows extension asks to provide a path to the global home directory.
-It's recommended to make the path as short as possible to minimize [MAX_PATH problems](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry) especially when using Python.
+On Windows, the extension asks to provide a path to the global home directory.
+It's recommended to make the path as short as possible to minimize [MAX_PATH problems](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry), especially when using Python.
 
 ## DotEnv file support
 
 DotEnv file is a convenient way to provide environment variables to other extensions or user scripts.
-Each time user creates or activates an environment there is a ~/.micromamba/.env.{prefix-name} file created.
+Each time a user creates or activates an environment, a ~/.micromamba/.env.{prefix-name} file is created.
 
 ## Multi-root workspaces
 
-With multi-root workspaces all operations will work the same way as if you open the first workspace folder in VSCode.
+With multi-root workspaces, all operations will work the same way as if you open the first workspace folder in VSCode.
 The idea is that the first workspace folder is a target folder.
 
 Let's say you have a ```project.code-workspace``` with content:
@@ -158,8 +157,8 @@ Assuming folders are already created, when you open the workspace in VSCode and 
 
 ## How to get it?
 
-Simply open [Micromamba - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba) and click "Install".
-Alternatively open Visual Studio Code, go to the extension view and search for "Micromamba".
+Simply open [Micromamba - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba) and click _Install_.
+Alternatively, open Visual Studio Code, go to the extension view and search for _Micromamba_.
 
 For detailed releases and migration help, please see [releases](https://github.com/mamba-org/vscode-micromamba/releases).
 
