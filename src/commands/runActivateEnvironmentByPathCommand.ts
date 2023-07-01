@@ -8,7 +8,7 @@ export const runActivateEnvironmentByPathCommand: CommandLike = async ({ params,
   const uris = await window.showOpenDialog({
     canSelectFolders: true,
     openLabel: 'Activate',
-    title: 'micromamba: Select existing environment',
+    title: 'Micromamba: Select existing environment',
   })
   if (!uris) return
   const { micromambaParams } = params

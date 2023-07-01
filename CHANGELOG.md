@@ -6,6 +6,10 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
+### 0.1.18
+
+* Show output command added
+
 ### 0.1.17
 
 * Activate external environments

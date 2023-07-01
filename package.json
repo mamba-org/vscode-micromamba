@@ -79,6 +79,10 @@
       {
         "command": "corker.micromamba.activate.environment.by.path",
         "title": "Micromamba: activate environment by path"
+      },
+      {
+        "command": "corker.micromamba.show.output",
+        "title": "Micromamba: show output"
       }
     ]
   },

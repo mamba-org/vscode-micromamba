@@ -11,7 +11,7 @@ export const runUseGlobalHomeDirCommand: CommandLike = async ({ signals, ch }) =
     const uris = await window.showOpenDialog({
       canSelectFolders: true,
       openLabel: 'Home',
-      title: 'micromamba: Global home directory',
+      title: 'Micromamba: Global home directory',
       defaultUri: Uri.file('C:/')
     })
     if (!uris) return

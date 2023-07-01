@@ -11,7 +11,7 @@ import { makeEnvironmentInfo } from './micromamba/makeEnvironmentInfo'
 
 export function activate(ctx: ExtensionContext): void {
   if (!workspace.workspaceFolders) {
-    window.showInformationMessage('micromamba: Open a folder or a workspace')
+    window.showInformationMessage('Micromamba: Open a folder or a workspace')
     return
   }
   initProcessEnv(ctx, workspace.workspaceFolders[0])

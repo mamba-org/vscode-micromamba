@@ -23,26 +23,27 @@ export const runCreateEnvironmentCommand: CommandLike = async ({ params, signals
         progress.report({ message: 'Downloading' })
         try {
           await ensureMicromamba(micromambaParams.mambaRootPrefix)
-        } catch (ignore) {
+        } catch (_) {
           throw new Error(`Can't download micromamba`)
         }
-        progress.report({ message: 'Updating'})
+        progress.report({ message: 'Updating' })
         try {
           await updateMicromamba(micromambaParams, ch)
-        } catch (ignore) {
+        } catch (_) {
           throw new Error(`Can't update micromamba`)
         }
-        progress.report({ message: 'Creating environment'})
+        progress.report({ message: 'Creating environment' })
         try {
           await createMicromambaEnvironment(micromambaParams, environmentFile, ch)
-        } catch (ignore) {
+        } catch (_) {
           throw new Error(`Can't create environment`)
         }
       })
     signals.activeEnvironmentInput.set({ name: environmentFile.content.name, path: undefined })
   } catch (error) {
+    const commandLink = ' ([output](command:corker.micromamba.show.output))'
     const message = isNativeError(error) ? error.message : `Can't create micromamba environment`
-    window.showErrorMessage(message)
+    window.showErrorMessage('Micromamba: ' + message + commandLink)
   }
   askToReloadWindow()
 }
