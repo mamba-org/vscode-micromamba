@@ -97,6 +97,13 @@ Update micromamba to the latest version.
 
 > Micromamba updates each time before creating a new environment
 
+### Micromamba: show output
+
+Show output pane and select micromamba source
+
+1. Open the command palette (Ctrl+Shift+P)
+2. Type - micromamba show output
+
 ## Global home directory
 
 The extension works locally by default when all additional files are created in the `<workspaceRoot>/.micromamba` directory.
