@@ -5,6 +5,7 @@ import * as tar from 'tar'
 import bz2 from 'unbzip2-stream'
 import { URL } from 'url'
 import sh from '../sh'
+import * as os from 'os'
 
 export const _downloadMicromamba = async (url: string, tar: Writable): Promise<void> => {
   try {
@@ -54,8 +55,22 @@ export const downloadMicromambaWin = async (cwd: string): Promise<void> => {
   await _downloadMicromamba(url, stream)
 }
 
+const makeMacDownloadArch = (): string => {
+  const arch = os.arch()
+  switch (arch) {
+    case 'x64':
+      return '64'
+
+    case 'arm64':
+      return arch
+
+    default:
+      throw new Error(`${arch} CPU architecture is not supported by micromamba`)
+  }
+}
+
 export const downloadMicromambaMac = async (cwd: string): Promise<void> => {
-  const url = 'https://micromamba.snakepit.net/api/micromamba/osx-64/latest'
+  const url = `https://micromamba.snakepit.net/api/micromamba/osx-${makeMacDownloadArch()}/latest`
   const stream = tar.x({ cwd, strip: 1 }, ['bin/micromamba'])
   await _downloadMicromamba(url, stream)
   await sh.chmodR('755', cwd)

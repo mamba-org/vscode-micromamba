@@ -9,3 +9,5 @@ generated-icons/
 *.vsix
 tmp
 .idea
+
+/.micromamba/
