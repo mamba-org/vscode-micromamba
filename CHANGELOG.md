@@ -6,6 +6,10 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
+### 0.1.20
+
+* Allow micromamba rc files and environment variables
+
 ### 0.1.19
 
 * Use arm64 micromamba for Apple Silicon

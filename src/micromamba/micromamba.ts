@@ -4,8 +4,6 @@ import { isWindows } from '../infra'
 import { spawnSync } from 'child_process'
 
 const commonArgs = [
-  '--no-rc',
-  '--no-env',
   '--yes',
 ]
 
