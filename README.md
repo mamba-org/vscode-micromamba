@@ -1,6 +1,6 @@
 # vscode-micromamba
 
-[![Build Status](https://github.com/mamba-org/vscode-micromamba/workflows/ci/badge.svg?branch=main)](https://github.com/mamba-org/vscode-micromamba/tree/main) [![Coverage Status](https://coveralls.io/repos/github/mamba-org/vscode-micromamba/badge.svg?branch=main)](https://coveralls.io/github/mamba-org/vscode-micromamba?branch=main) [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/corker.vscode-micromamba?color=success&label=Visual%20Studio%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba) ![Open VSX Version](https://img.shields.io/open-vsx/v/corker/vscode-micromamba?label=Open%20VSX%20Registry&color=success)
+[![Build Status](https://github.com/mamba-org/vscode-micromamba/workflows/ci/badge.svg?branch=main)](https://github.com/mamba-org/vscode-micromamba/tree/main) [![Coverage Status](https://coveralls.io/repos/github/mamba-org/vscode-micromamba/badge.svg?branch=main)](https://coveralls.io/github/mamba-org/vscode-micromamba?branch=main) [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/corker.vscode-micromamba?color=success&label=Visual%20Studio%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=corker.vscode-micromamba) [![Open VSX Version](https://img.shields.io/open-vsx/v/corker/vscode-micromamba?label=Open%20VSX%20Registry&color=success)](https://open-vsx.org/extension/corker/vscode-micromamba)
 
 
 
