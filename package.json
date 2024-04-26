@@ -2,7 +2,7 @@
   "name": "vscode-micromamba",
   "displayName": "Micromamba",
   "description": "Make conda environments with micromamba.",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "publisher": "corker",
   "engines": {
     "vscode": "^1.76.0"
