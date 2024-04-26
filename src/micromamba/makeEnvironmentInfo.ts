@@ -4,6 +4,7 @@ import { combineLatest, concatMap, shareReplay } from "rxjs";
 import { makeMicromambaParams } from "./makeMicromambaParams";
 import { getMicromambaEnvVariables } from "./getMicromambaEnvVariables";
 import { EnvironmentFailed, EnvironmentOK } from "./_definitions";
+import { isNativeError } from "util/types";
 
 interface Props {
   ch: OutputChannel
@@ -33,7 +34,14 @@ export async function _makeEnvironmentInfo({ workspaceFolder, globalHomeDir, env
       vars: await getMicromambaEnvVariables({ micromambaParams, environmentParams }),
       ok: true,
     } as EnvironmentOK
-  } catch (ignore) {
+  } catch (err) {
+    if (isNativeError(err)) {
+      ch?.appendLine('Error: ' + err.message)
+      ch?.appendLine('Stack: ' + err.stack)
+    } else {
+      ch?.appendLine('Error: ' + err)
+    }
+    ch?.show(true)
     window.showErrorMessage(`Micromamba can't create ${environmentParams.name} environment`)
     return {
       ...common,
