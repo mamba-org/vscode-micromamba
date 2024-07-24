@@ -8,17 +8,34 @@ import { appendFileSync, unlinkSync } from 'fs'
 import { EnvironmentParams } from './makeSignals'
 
 export function parseMicromambaShellActivateResponse(res: string) {
+
   return res
     .split('\r\n')
     .join('\n')
     .split('\n')
     .map((x) => x.split('='))
-    .filter((x) => x.length === 2)
+    .filter((x) => x.length === 2 && !isExcludedEnvVar(x[0]))
+    .sort((a, b) => a[0].localeCompare(b[0]))
     .map((x) => {
       const name = x[0]
       const value = x[1]
       return { name, value }
     }) as EnvironmentVariables
+}
+
+const excludedEnvVars = [
+  'PWD', 'OLDPWD', // Current and previous working directories, process specific
+  'SHLVL', '_', 'SHELL', 'CONDA_SHLVL', 'COMMAND_MODE', // Shell specific runtime variables
+  'DISPLAY', // Display server configuration for the current instance of the VSCode
+  'USER', 'LOGNAME', 'HOME' // User specific variables, provided by the system
+]
+function isExcludedEnvVar(name: string) {
+  return excludedEnvVars.includes(name)
+    || name.startsWith('VSCODE_') // VSCode internal helper variables
+    || name.startsWith('ELECTRON_') // Electron internal helper variables
+    || name.startsWith('HOMEBREW_') // Homebrew configuration, homebrew is external to the environment
+    || name.startsWith('__CF') // CoreFoundation configuration, process specific
+    || name.startsWith('XPC_') // XPC configuration, process specific
 }
 
 export interface Params {
