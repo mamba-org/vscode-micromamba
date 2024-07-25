@@ -33,7 +33,7 @@
     "workspace"
   ],
   "activationEvents": [
-    "*"
+    "workspaceContains:environment*.{yml,yaml}"
   ],
   "contributes": {
     "commands": [
