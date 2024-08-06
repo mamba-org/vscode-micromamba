@@ -6,6 +6,11 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
+### 0.1.21
+
+* Limit extension activation events
+* Use new EnvironmentVariableCollection API
+
 ### 0.1.20
 
 * Allow micromamba rc files and environment variables
