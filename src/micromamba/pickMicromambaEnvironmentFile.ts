@@ -111,7 +111,11 @@ export const readMicromambaEnvironmentFile = async (
   const filePath = join(extContext.workspaceDir, fileName)
   try {
     const contentYaml = await fs.promises.readFile(filePath, 'utf8')
-    const content = YAML.parse(contentYaml) as MicromambaEnvironmentFileContent
+    const rawContent = YAML.parse(contentYaml) as MicromambaEnvironmentFileContent
+    const content = rawContent.name ? rawContent : {
+      ...rawContent,
+      name: 'default'
+    }
     return { content, fileName, filePath }
   } catch (ignore) {
     return undefined
