@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: 16
+          node-version: 20
       - run: npm ci
       - run: npm run lint
       - uses: GabrielBB/xvfb-action@master
@@ -41,12 +41,12 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: 16
+          node-version: 20
       - run: npm ci
       - run: npm run compile
       - uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.github_token }}
           parallel-finished: true
-      - run: npm i -g vsce
+      - run: npm i -g @vscode/vsce
       - run: vsce publish -p ${{ secrets.PUBLISHER_TOKEN }}

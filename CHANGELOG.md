@@ -6,6 +6,10 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
+### 0.1.23
+
+* Fix error when missing name in the environment file
+
 ### 0.1.21
 
 * Limit extension activation events

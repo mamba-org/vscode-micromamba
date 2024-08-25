@@ -7,4 +7,4 @@ channels:
   - conda-forge
 
 dependencies:
-  - nodejs=16
+  - nodejs=20
