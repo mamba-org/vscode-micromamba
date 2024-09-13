@@ -7,6 +7,8 @@ import { URL } from 'url'
 import sh from '../sh'
 import * as os from 'os'
 
+// See: https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html#linux-and-macos
+
 export const _downloadMicromamba = async (url: string, tar: Writable): Promise<void> => {
   try {
     await _downloadMicromamba1(url, tar)
@@ -55,22 +57,19 @@ export const downloadMicromambaWin = async (cwd: string): Promise<void> => {
   await _downloadMicromamba(url, stream)
 }
 
-const makeMacDownloadArch = (): string => {
-  const arch = os.arch()
-  switch (arch) {
-    case 'x64':
-      return '64'
-
-    case 'arm64':
-      return arch
-
-    default:
-      throw new Error(`${arch} CPU architecture is not supported by micromamba`)
-  }
-}
-
 export const downloadMicromambaMac = async (cwd: string): Promise<void> => {
-  const url = `https://micromamba.snakepit.net/api/micromamba/osx-${makeMacDownloadArch()}/latest`
+  function getUrl() {
+    const arch = os.arch()
+    switch (arch) {
+      case 'x64':
+        return `https://micromamba.snakepit.net/api/micromamba/osx-64/latest`
+      case 'arm64':
+        return `https://micromamba.snakepit.net/api/micromamba/osx-arm64/latest`
+      default:
+        throw new Error(`${arch} CPU architecture is not supported by micromamba`)
+    }
+  }
+  const url = getUrl()
   const stream = tar.x({ cwd, strip: 1 }, ['bin/micromamba'])
   await _downloadMicromamba(url, stream)
   await sh.chmodR('755', cwd)
@@ -78,7 +77,20 @@ export const downloadMicromambaMac = async (cwd: string): Promise<void> => {
 }
 
 export const downloadMicromambaLinux = async (cwd: string): Promise<void> => {
-  const url = 'https://micromamba.snakepit.net/api/micromamba/linux-64/latest'
+  function getUrl() {
+    const arch = os.arch()
+    switch (arch) {
+      case 'x64':
+        return `https://micromamba.snakepit.net/api/micromamba/linux-64/latest`
+      case 'arm64':
+        return `https://micromamba.snakepit.net/api/micromamba/linux-aarch64/latest`
+      case 'ppc64':
+        return `https://micromamba.snakepit.net/api/micromamba/linux-ppc64le/latest`
+      default:
+        throw new Error(`${arch} CPU architecture is not supported by micromamba`)
+    }
+  }
+  const url = getUrl()
   const stream = tar.x({ cwd, strip: 1 }, ['bin/micromamba'])
   await _downloadMicromamba(url, stream)
   await sh.chmodR('755', cwd)

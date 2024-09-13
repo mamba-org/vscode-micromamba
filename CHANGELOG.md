@@ -6,6 +6,10 @@ Bug-fixes within the same version aren't needed
 ## Master
 
 -->
+### 0.1.24
+
+* Use arm64 micromamba for Linux
+
 ### 0.1.23
 
 * Fix error when missing name in the environment file
