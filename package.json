@@ -125,7 +125,7 @@
     "@typescript-eslint/parser": "^5.56.0",
     "@vscode/test-electron": "^2.4.1",
     "coveralls": "^3.1.1",
-    "esbuild": "^0.17.12",
+    "esbuild": "^0.25.0",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.8.0",
     "istanbul-lib-coverage": "^3.2.0",
